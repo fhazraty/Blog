@@ -22,20 +22,12 @@ namespace DAL.EF
 		public DbSet<Category> Categories { get; set; }
 		public DbSet<UploadedFile> UploadedFiles { get; set; }
 		public DbSet<Menu> Menus { get; set; }
-		public BlogContext()
-		{
-		}
-
-		public BlogContext(DbContextOptions<BlogContext> options)
-			: base(options)
-		{
-		}
-
+		public BlogContext(){ }
+		public BlogContext(DbContextOptions<BlogContext> options) : base(options) { }
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			base.OnConfiguring(optionsBuilder);
-
 			optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=BlogDatabase;Integrated Security=True;Trust Server Certificate=True");
+			base.OnConfiguring(optionsBuilder);
 		}
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

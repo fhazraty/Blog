@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -18,7 +19,7 @@
                     <a href="#about" class="text-white text-decoration-none me-3">مطالب</a>
                     <a href="#contact" class="text-white text-decoration-none me-3">جستجو</a>
                 </nav>
-                    
+
                 <a class="text-white text-decoration-none me-auto">ورود به سامانه</a>
             </div>
         </div>
@@ -74,9 +75,15 @@
     <!-- Footer -->
     <footer class="bg-dark text-white py-4">
         <div class="container text-center">
-            <p>&copy; @DateTime.Now.Date.Year وبلاگ من. تمامی حقوق محفوظ است.</p>
+            @{
+                System.Globalization.PersianCalendar calendar = new System.Globalization.PersianCalendar();
+            }
+
+            <p>&copy; @calendar.GetYear(DateTime.Now) وبلاگ من. تمامی حقوق محفوظ است.</p>
         </div>
     </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
 </body>
 </html>

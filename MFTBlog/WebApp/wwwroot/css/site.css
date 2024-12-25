@@ -1,31 +1,34 @@
-html {
-  font-size: 14px;
+@font-face {
+    font-family: 'Vazir';
+    src: url('../fonts/vazir/Vazirmatn.woff2') format('woff2'), 
+        url('../fonts/vazir/Vazirmatn.woff') format('woff'), 
+        url('../fonts/vazir/Vazirmatn.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+@font-face {
+    font-family: 'Vazir-Bold';
+    src: url('../fonts/vazir/Vazirmatn-Bold.woff2') format('woff2'), 
+        url('../fonts/vazir/Vazirmatn-Bold.woff') format('woff'), 
+        url('../fonts/vazir/Vazirmatn-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
 }
 
 body {
-  margin-bottom: 60px;
+    font-family: 'Vazir', Arial, sans-serif;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+@media (min-width: 769px) {
+    body {
+        font-size: 16px;
+    }
 }
+

@@ -2,6 +2,7 @@
 Install-Package Microsoft.EntityFrameworkCore.SqlServer
 Install-Package Microsoft.EntityFrameworkCore.Tools
 Install-Package Microsoft.EntityFrameworkCore.Design
+Install-package Microsoft.EntityFrameworkCore.Proxies
 
 Add-Migration InitialCreate -Context "BlogContext"
 Update-Database -Context "BlogContext"
@@ -27,6 +28,7 @@ namespace DAL.EF
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
 			optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=BlogDatabase;Integrated Security=True;Trust Server Certificate=True");
+			optionsBuilder.UseLazyLoadingProxies(); // فعال کردن Lazy Loading
 			base.OnConfiguring(optionsBuilder);
 		}
 		protected override void OnModelCreating(ModelBuilder modelBuilder)

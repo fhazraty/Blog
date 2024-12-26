@@ -7,3 +7,7 @@ namespace DAL.EF.Repository
 		Task<Role> GetRoleByNameAsync(string name);
 	}
 }
+
+
+
+

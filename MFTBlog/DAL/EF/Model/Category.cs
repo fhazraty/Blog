@@ -9,8 +9,8 @@ namespace DAL.EF.Model
 		[Required, MaxLength(100)]
 		public string Name { get; set; }
 		public int? ParentCategoryId { get; set; }
-		public Category ParentCategory { get; set; }
-		public ICollection<Category> SubCategories { get; set; } = new List<Category>();
-		public ICollection<Post> Posts { get; set; } = new List<Post>();
+		public virtual Category ParentCategory { get; set; }
+		public virtual ICollection<Category> SubCategories { get; set; } = new List<Category>();
+		public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 	}
 }

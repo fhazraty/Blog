@@ -7,3 +7,5 @@ namespace DAL.EF.Repository
 		Task<User?> FindByUsername(string username);
 	}
 }
+
+

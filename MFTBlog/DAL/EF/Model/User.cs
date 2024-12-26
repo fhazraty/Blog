@@ -21,7 +21,7 @@ namespace DAL.EF.Model
 		public DateTime BirthDate { get; set; }
 		public DateTime PasswordCreatedAt { get; set; }
 		public DateTime PasswordUpdatedAt { get; set; }
-		public ICollection<Role> Roles { get; set; } = new List<Role>();
-		public ICollection<Post> Posts { get; set; } = new List<Post>();
+		public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
+		public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 	}
 }

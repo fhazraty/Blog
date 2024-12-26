@@ -15,13 +15,13 @@ namespace DAL.EF.Model
 
 		public DateTime CreatedAt { get; set; }
 
-		public ICollection<Tag> Tags { get; set; } = new List<Tag>();
+		public virtual ICollection<Tag> Tags { get; set; } = new List<Tag>();
 
-		public Category Category { get; set; }
+		public virtual Category Category { get; set; }
 
 		public int? CategoryId { get; set; }
 
-		public User Author { get; set; }
+		public virtual User Author { get; set; }
 
 		public int AuthorId { get; set; }
 	}

@@ -10,7 +10,7 @@ namespace DAL.EF.Model
 		public string Title { get; set; }
 		public string Url { get; set; }
 		public int? ParentMenuId { get; set; }
-		public Menu ParentMenu { get; set; }
-		public ICollection<Menu> SubMenus { get; set; } = new List<Menu>();
+		public virtual Menu ParentMenu { get; set; }
+		public virtual ICollection<Menu> SubMenus { get; set; } = new List<Menu>();
 	}
 }

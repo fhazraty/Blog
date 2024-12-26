@@ -28,7 +28,6 @@ namespace DAL.EF
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
 			optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=BlogDatabase;Integrated Security=True;Trust Server Certificate=True");
-			optionsBuilder.UseLazyLoadingProxies(); // فعال کردن Lazy Loading
 			base.OnConfiguring(optionsBuilder);
 		}
 		protected override void OnModelCreating(ModelBuilder modelBuilder)

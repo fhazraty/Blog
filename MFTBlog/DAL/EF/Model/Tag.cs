@@ -10,6 +10,6 @@ namespace DAL.EF.Model
 		[Required, MaxLength(50)]
 		public string Name { get; set; }
 
-		public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
+		public ICollection<Post> Posts { get; set; } = new List<Post>();
 	}
 }

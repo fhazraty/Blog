@@ -3,7 +3,6 @@ using BLL.Model;
 using DAL.EF.Model;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using WebApp.ViewModel;
 
@@ -29,20 +28,10 @@ namespace WebApp.Controllers
 				Username = loginViewModel.Username,
 				Password = loginViewModel.Password
 			});
-
-			if (!usr.IsSuccessful)
-			{
-				return RedirectToAction("ErrorInUsernameOrPassword", "Account");
-			}
-
+			if (!usr.IsSuccessful) { return RedirectToAction("ErrorInUsernameOrPassword", "Account"); }
 			int usrId = ((ResultEntityViewModel<User>)usr).Entity.Id;
 			var roles = ((ResultEntityViewModel<User>)usr).Entity.Roles.ToList();
-
-			if (roles.Count == 0)
-			{
-				return RedirectToAction("ErrorInUsernameOrPassword", "Account");
-			}
-
+			if (roles.Count == 0) { return RedirectToAction("ErrorInUsernameOrPassword", "Account"); }
 			var role = roles[0].Name;
 			if (role == "Writer" || role == "Admin")
 			{
@@ -52,10 +41,8 @@ namespace WebApp.Controllers
 					new Claim("Username", loginViewModel.Username),
 					new Claim("usrId", usrId.ToString())
 				};
-
 				ClaimsIdentity identity = new ClaimsIdentity(claims, "cookie");
 				ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-
 				await HttpContext.SignInAsync(
 					scheme: "mft",
 					principal: principal,
@@ -63,10 +50,8 @@ namespace WebApp.Controllers
 					{
 						ExpiresUtc = DateTime.UtcNow.AddMinutes(30)
 					});
-
 				return RedirectToAction("Index", role);
 			}
-
 			return RedirectToAction("ErrorInUsernameOrPassword", "Account");
 		}
 

@@ -1,0 +1,66 @@
+﻿@{
+    Layout = "~/Views/Shared/_PagesLayout.cshtml";
+}
+
+@model WebApp.ViewModel.LoginViewModel
+
+<style>
+    input#Username::placeholder, input#Password::placeholder {
+        direction:rtl;
+        text-align: right;
+    }
+
+    input#Username, input#Password {
+        direction: ltr;
+        text-align: left;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h4>ورود به سامانه</h4>
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm("TryToLogin", "Account", new { @id = string.Empty }, FormMethod.Post, false, new { @id = "loginform" }))
+                    {
+                        <!-- فیلد Username -->
+                        <div class="mb-3">
+                            <label for="inputUsername" class="form-label">نام کاربری</label>
+                            @Html.TextBoxFor(model => model.Username, new
+                                {
+                                    @class = "form-control",
+                                    @autocomplete = "off",
+                                    @placeholder = "نام کاربری را وارد کنید"
+                                })
+                        </div>
+
+                        <!-- فیلد Password -->
+                        <div class="mb-3">
+                            <label for="inputPassword5" class="form-label">رمز عبور</label>
+                            @Html.PasswordFor(model => model.Password, new
+                                {
+                                    @class = "form-control",
+                                    @autocomplete = "off",
+                                    @placeholder = "رمز عبور را وارد کنید"
+                                })
+                            <div id="passwordHelpBlock" class="form-text">
+                                رمز عبور شما باید بین 8 تا 20 کاراکتر باشد، شامل حرف و عدد باشد و شامل حداقل یکی از کاراکترهای خاص یا ایموجی باشد.
+                            </div>
+                        </div>
+
+                        <!-- دکمه Login -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">ورود</button>
+                        </div>
+                    }
+                </div>
+                <div class="card-footer text-center">
+                    <small>ثبت نام نکرده اید؟ <a href="../../Account/RegisterUserWriter">ثبت نام</a></small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

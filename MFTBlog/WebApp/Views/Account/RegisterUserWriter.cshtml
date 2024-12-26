@@ -1,0 +1,107 @@
+﻿@{
+    Layout = "~/Views/Shared/_PagesLayout.cshtml";
+}
+
+@model WebApp.ViewModel.RegisterViewModel
+
+<style>
+    input::placeholder {
+        direction: rtl;
+        text-align: right;
+    }
+
+    .mustbeLTRTyping {
+        direction: ltr;
+        text-align: left;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h4>ثبت‌نام در سامانه</h4>
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm("Register", "Account", FormMethod.Post))
+                    {
+                        <!-- فیلد FirstName -->
+                        <div class="mb-3">
+                            <label for="inputFirstName" class="form-label">نام</label>
+                            @Html.TextBoxFor(model => model.FirstName, new
+                                {
+                                    @class = "form-control",
+                                    @placeholder = "نام را وارد کنید"
+                                })
+                            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                        </div>
+
+                        <!-- فیلد LastName -->
+                        <div class="mb-3">
+                            <label for="inputLastName" class="form-label">نام خانوادگی</label>
+                            @Html.TextBoxFor(model => model.LastName, new
+                                {
+                                    @class = "form-control",
+                                    @placeholder = "نام خانوادگی را وارد کنید"
+                                })
+                            @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                        </div>
+
+                        <!-- فیلد NationalCode -->
+                        <div class="mb-3">
+                            <label for="inputNationalCode" class="form-label">کد ملی</label>
+                            @Html.TextBoxFor(model => model.NationalCode, new
+                                {
+                                    @class = "form-control",
+                                    @placeholder = "کد ملی را وارد کنید"
+                                })
+                            @Html.ValidationMessageFor(model => model.NationalCode, "", new { @class = "text-danger" })
+                        </div>
+
+                        <!-- فیلد Username -->
+                        <div class="mb-3">
+                            <label for="inputUsername" class="form-label">نام کاربری</label>
+                            @Html.TextBoxFor(model => model.Username, new
+                                {
+                                    @class = "form-control mustbeLTRTyping",
+                                    @placeholder = "نام کاربری را وارد کنید"
+                                })
+                            @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+                        </div>
+
+                        <!-- فیلد Password -->
+                        <div class="mb-3">
+                            <label for="inputPassword" class="form-label">رمز عبور</label>
+                            @Html.PasswordFor(model => model.Password, new
+                                {
+                                    @class = "form-control mustbeLTRTyping",
+                                    @placeholder = "رمز عبور را وارد کنید"
+                                })
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                        </div>
+
+                        <!-- فیلد BirthDate -->
+                        <div class="mb-3">
+                            <label for="inputBirthDate" class="form-label">تاریخ تولد</label>
+                            @Html.TextBoxFor(model => model.BirthDate, "{0:yyyy-MM-dd}", new
+                                {
+                                    @class = "form-control",
+                                    @type = "date"
+                                })
+                            @Html.ValidationMessageFor(model => model.BirthDate, "", new { @class = "text-danger" })
+                        </div>
+
+                        <!-- دکمه ثبت‌نام -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">ثبت‌نام</button>
+                        </div>
+                    }
+                </div>
+                <div class="card-footer text-center">
+                    <small>قبلاً ثبت‌نام کرده‌اید؟ <a href="/Account/Login">ورود</a></small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

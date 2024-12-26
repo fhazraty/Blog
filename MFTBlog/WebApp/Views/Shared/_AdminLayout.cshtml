@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل مدیریت وبلاگ</title>
+    <!-- لینک به Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Vazir', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            height: 100vh;
+            background-color: #343a40;
+            color: white;
+        }
+
+            .sidebar a {
+                color: white;
+                text-decoration: none;
+                padding: 10px 15px;
+                display: flex;
+                align-items: center;
+            }
+
+                .sidebar a:hover {
+                    background-color: #495057;
+                    border-radius: 5px;
+                }
+
+            .sidebar .active {
+                background-color: #007bff;
+                color: white;
+                border-radius: 5px;
+            }
+
+            .sidebar i {
+                margin-left: 10px;
+            }
+
+        .content {
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- نوار کناری -->
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div class="text-center py-3">
+                    <h4>پنل مدیریت</h4>
+                </div>
+                <ul class="list-unstyled">
+                    <li><a href="#dashboard" class="active"><i class="fas fa-tachometer-alt"></i> داشبورد</a></li>
+                    <li><a href="#users"><i class="fas fa-users"></i> کاربران</a></li>
+                    <li><a href="#roles"><i class="fas fa-user-shield"></i> نقش‌ها</a></li>
+                    <li><a href="#posts"><i class="fas fa-file-alt"></i> پست‌ها</a></li>
+                    <li><a href="#categories"><i class="fas fa-tags"></i> دسته‌بندی‌ها</a></li>
+                    <li><a href="#tags"><i class="fas fa-tag"></i> تگ‌ها</a></li>
+                    <li><a href="#files"><i class="fas fa-upload"></i> فایل‌های آپلود شده</a></li>
+                    <li><a href="#menus"><i class="fas fa-bars"></i> منوها</a></li>
+                </ul>
+            </nav>
+
+            <!-- محتوای اصلی -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <!-- نوار بالا -->
+                <nav class="navbar navbar-expand-lg navbar-dark">
+                    <div class="container-fluid">
+                        <span class="navbar-brand">پنل مدیریت وبلاگ</span>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
+                </nav>
+
+                <!-- محتوای صفحات -->
+                <div class="mt-4 content" id="dashboard">
+                    <h2>داشبورد</h2>
+                    <p>خوش آمدید به پنل مدیریت وبلاگ.</p>
+                </div>
+                <div class="mt-4 content" id="users">
+                    <h2>مدیریت کاربران</h2>
+                    <p>لیست کاربران و قابلیت ویرایش، حذف و افزودن.</p>
+                </div>
+                <div class="mt-4 content" id="roles">
+                    <h2>مدیریت نقش‌ها</h2>
+                    <p>ایجاد، ویرایش و حذف نقش‌ها.</p>
+                </div>
+                <!-- سایر بخش‌ها -->
+            </main>
+        </div>
+    </div>
+    @RenderBody()
+    <!-- اسکریپت‌های Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
+</body>
+</html>

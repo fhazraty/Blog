@@ -14,6 +14,7 @@ namespace DAL.EF.Repository
 				await
 				this
 					._dbSet
+					.Include(u => u.Roles)
 					.FirstOrDefaultAsync(u => u.Username == username);
 		}
 	}

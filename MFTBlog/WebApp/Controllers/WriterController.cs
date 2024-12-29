@@ -14,7 +14,32 @@ namespace WebApp.Controllers
 
 		[HttpGet]
 		[Authorize(Roles = "Writer")]
+		public IActionResult ListPosts()
+		{
+			return View();
+		}
+
+		[HttpGet]
+		[Authorize(Roles = "Writer")]
 		public IActionResult AddNewPost()
+		{
+			return View();
+		}
+		[HttpGet]
+		[Authorize(Roles = "Writer")]
+		public IActionResult ListCategories()
+		{
+			return View();
+		}
+		[HttpGet]
+		[Authorize(Roles = "Writer")]
+		public IActionResult ListTags()
+		{
+			return View();
+		}
+		[HttpGet]
+		[Authorize(Roles = "Writer")]
+		public IActionResult ListFiles()
 		{
 			return View();
 		}

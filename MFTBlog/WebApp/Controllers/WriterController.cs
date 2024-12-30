@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApp.ViewModel;
 
 namespace WebApp.Controllers
 {
@@ -22,6 +23,13 @@ namespace WebApp.Controllers
 		[HttpGet]
 		[Authorize(Roles = "Writer")]
 		public IActionResult AddNewPost()
+		{
+			return View();
+		}
+
+		[HttpPost]
+		[Authorize(Roles = "Writer")]
+		public IActionResult AddNewPost([FromBody] AddNewPostViewModel addNewPostViewModel)
 		{
 			return View();
 		}

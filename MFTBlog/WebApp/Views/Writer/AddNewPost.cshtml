@@ -2,85 +2,117 @@
     ViewData["Title"] = "اضافه کردن پست جدید";
     Layout = "/Views/Shared/_WriterLayout.cshtml";
 }
-<!DOCTYPE html>
-<html>
-<head>
-	<link href="~/lib/kendo/css/web/default-main.css" rel="stylesheet" />
+
+<div class="mt-4 content">
+    <div class="container mt-3">
+        <div class="form-group w-100">
+            <label for="PostTitle" class="mr-2">عنوان صفحه:</label>
+            <input type="text" id="PostTitle" name="PostTitle" class="form-control mb-2" placeholder="عنوان پست">
+        </div>
+        <div class="k-rtl">
+            <div id="editorSection" class="demo-section wide w-100 mb-2">
+                <textarea id="editor" rows="5" cols="30" class="form-control" style="min-height:400px" aria-label="editor"></textarea>
+            </div>
+        </div>
+
+
+        <div class="d-flex justify-content-end">
+            <button id="saveButton" class="btn btn-success">ذخیره</button>
+        </div>
+        
+    </div>
+</div>
+
+@section HeaderCSS {
+    <link href="~/lib/kendo/css/web/default-main.css" rel="stylesheet" />
+}
+
+@section BottomJS {
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/kendo/js/kendo.all.min.js"></script>
-</head>
-<body>
+    <script>
+        $(document).ready(function() {
+            $("#editor").kendoEditor({
+                stylesheets: ["../content/shared/styles/editor.css"],
+                tools: [
+                    "bold",
+                    "italic",
+                    "underline",
+                    "strikethrough",
+                    "justifyLeft",
+                    "justifyCenter",
+                    "justifyRight",
+                    "justifyFull",
+                    "insertUnorderedList",
+                    "insertOrderedList",
+                    "indent",
+                    "outdent",
+                    "createLink",
+                    "unlink",
+                    "insertImage",
+                    "insertFile",
+                    "subscript",
+                    "superscript",
+                    "tableWizard",
+                    "createTable",
+                    "addRowAbove",
+                    "addRowBelow",
+                    "addColumnLeft",
+                    "addColumnRight",
+                    "deleteRow",
+                    "deleteColumn",
+                    "viewHtml",
+                    "formatting",
+                    "cleanFormatting",
+                    "fontName",
+                    "fontSize",
+                    "foreColor",
+                    "backColor"
+                ],
+                fontName: [
+                    { text: "Vazir", value: "Vazir" },
+                    { text: "Andale Mono", value: "Andale Mono" },
+                    { text: "Arial", value: "Arial" },
+                    { text: "Arial Black", value: "Arial Black" },
+                    { text: "Book Antiqua", value: "Book Antiqua" },
+                    { text: "Comic Sans MS", value: "Comic Sans MS" },
+                    { text: "Courier New", value: "Courier New" },
+                    { text: "Georgia", value: "Georgia" },
+                    { text: "Helvetica", value: "Helvetica" },
+                    { text: "Impact", value: "Impact" },
+                    { text: "Symbol", value: "Symbol" },
+                    { text: "Tahoma", value: "Tahoma" },
+                    { text: "Terminal", value: "Terminal" },
+                    { text: "Times New Roman", value: "Times New Roman" },
+                    { text: "Trebuchet MS", value: "Trebuchet MS" },
+                    { text: "Verdana", value: "Verdana" },
+                    { text: "Webdings", value: "Webdings" },
+                    { text: "Wingdings", value: "Wingdings" }
+                ]
+            });
 
-    <div id="example">
-        <div class="k-rtl">
-            <div id="example" class="demo-section wide">
-                <textarea id="editor" rows="10" cols="30" style="width:100%; height:810px" aria-label="editor"></textarea>
-            </div>
-
-            <script>
-                $(document).ready(function() {
-                    // create Editor from textarea HTML element with default set of tools
-                    $("#editor").kendoEditor({
-                        stylesheets: ["../content/shared/styles/editor.css"],
-                        tools: [
-                            "bold",
-                            "italic",
-                            "underline",
-                            "strikethrough",
-                            "justifyLeft",
-                            "justifyCenter",
-                            "justifyRight",
-                            "justifyFull",
-                            "insertUnorderedList",
-                            "insertOrderedList",
-                            "indent",
-                            "outdent",
-                            "createLink",
-                            "unlink",
-                            "insertImage",
-                            "insertFile",
-                            "subscript",
-                            "superscript",
-                            "tableWizard",
-                            "createTable",
-                            "addRowAbove",
-                            "addRowBelow",
-                            "addColumnLeft",
-                            "addColumnRight",
-                            "deleteRow",
-                            "deleteColumn",
-                            "viewHtml",
-                            "formatting",
-                            "cleanFormatting",
-                            "fontName",
-                            "fontSize",
-                            "foreColor",
-                            "backColor"
-                        ],
-                        fontName: [
-                            { text: "Vazir", value: "Vazir" },
-                            { text: "Andale Mono", value: "Andale Mono" },
-                            { text: "Arial", value: "Arial" },
-                            { text: "Arial Black", value: "Arial Black" },
-                            { text: "Book Antiqua", value: "Book Antiqua" },
-                            { text: "Comic Sans MS", value: "Comic Sans MS" },
-                            { text: "Courier New", value: "Courier New" },
-                            { text: "Georgia", value: "Georgia" },
-                            { text: "Helvetica", value: "Helvetica" },
-                            { text: "Impact", value: "Impact" },
-                            { text: "Symbol", value: "Symbol" },
-                            { text: "Tahoma", value: "Tahoma" },
-                            { text: "Terminal", value: "Terminal" },
-                            { text: "Times New Roman", value: "Times New Roman" },
-                            { text: "Trebuchet MS", value: "Trebuchet MS" },
-                            { text: "Verdana", value: "Verdana" },
-                            { text: "Webdings", value: "Webdings" },
-                            { text: "Wingdings", value: "Wingdings" }
-                        ]
-                    });
+            // Attach click event handler to save button
+            $('#saveButton').on('click', function() {
+                var postData = JSON.stringify({
+                    title: $('#PostTitle').val(),
+                    htmlContent: $("#editor").data("kendoEditor").value()
                 });
-            </script>
-        </div>
-    </div>
-</body>
-</html>
+
+                $.ajax({
+                    url: '@Url.Action("AddNewPost", "Writer")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: postData,
+                    success: function(response) {
+                        // Handle success
+                        alert('پست با موفقیت ذخیره شد');
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error
+                        alert('خطا در ذخیره پست');
+                    }
+                });
+            });
+        });
+    </script>
+}

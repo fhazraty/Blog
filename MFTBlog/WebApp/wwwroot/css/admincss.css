@@ -69,3 +69,6 @@ body {
     background-color: #007bff;
     color: white;
 }
+.active {
+    transition: all 1s ease; /* Transition for smooth animation */
+}

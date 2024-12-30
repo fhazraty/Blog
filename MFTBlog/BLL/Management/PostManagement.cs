@@ -1,12 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BLL.Model;
+using DAL.EF.Model;
+using DAL.EF.Repository;
 
 namespace BLL.Management
 {
-	public class PostManagement
+	public class PostManagement : IPostManagement
 	{
+		public IPostRepository PostRepository { get; set; }
+		public IUserRepository UserRepository { get; set; }
+		public ICategoryRepository CategoryRepository { get; set; }
+		public ITagRepository TagRepository { get; set; }
+		public PostManagement(IPostRepository postRepository,
+			IUserRepository userRepository,
+			ICategoryRepository categoryRepository,
+			ITagRepository tagRepository)
+		{
+			this.PostRepository = postRepository;
+			this.UserRepository = userRepository;
+			this.CategoryRepository = categoryRepository;
+			this.TagRepository = tagRepository;
+		}
+		public async Task<ResultViewModel> AddPost(PostViewModel postViewModel)
+		{
+			try
+			{
+				var post = new Post()
+				{
+					Author = await UserRepository.GetByIdAsync(postViewModel.AuthorId),
+					Category = await CategoryRepository.GetByIdAsync(postViewModel.CategoryId),
+					CreatedAt = DateTime.Now,
+					HtmlContent = postViewModel.HtmlContent,
+					Title = postViewModel.Title,
+					Tags = await TagRepository.GetAllByIdList(postViewModel.TagIdList)
+				};
+				
+				await this.PostRepository.AddAsync(post);
+
+				return new ResultEntityViewModel<Post>
+				{
+					IsSuccessful = true,
+					Entity = post
+				};
+			}
+			catch (Exception ex)
+			{
+				return new ResultEntityViewModel<Exception>
+				{
+					IsSuccessful = false,
+					Exception = ex
+				};
+			}
+		}
 	}
 }

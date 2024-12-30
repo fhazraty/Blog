@@ -8,5 +8,7 @@ namespace WebApp.ViewModel
 		public string Title { get; set; }
 		[Required(ErrorMessage = "محتوای HTML پست اجباری است")]
 		public string HtmlContent { get; set; }
+		public int CategoryId { get; set; }
+		public List<int> TagIdList { get; set; }
 	}
 }

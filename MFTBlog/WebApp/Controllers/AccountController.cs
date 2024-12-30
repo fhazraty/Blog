@@ -8,7 +8,7 @@ using WebApp.ViewModel;
 
 namespace WebApp.Controllers
 {
-	public class AccountController : Controller
+	public class AccountController : BaseController
 	{
 		public IUserManagement Usermanagement { get; set; }
 		public AccountController()

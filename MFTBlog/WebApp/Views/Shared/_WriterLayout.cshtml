@@ -20,11 +20,11 @@
                     <h4>پنل مدیریت</h4>
                 </div>
                 <ul class="list-unstyled">
-                    <li><a href="../../Writer/Index" class="active"><i class="fas fa-tachometer-alt"></i> داشبورد</a></li>
-                    <li><a href="../../Writer/ListPosts"><i class="fas fa-file-alt"></i> پست‌ها</a></li>
-                    <li><a href="../../Writer/ListCategories"><i class="fas fa-tag"></i> دسته‌بندی‌ها</a></li>
-                    <li><a href="../../Writer/ListTags"><i class="fas fa-tags"></i> تگ‌ها</a></li>
-                    <li><a href="../../Writer/ListFiles"><i class="fas fa-upload"></i> فایل‌های آپلود شده</a></li>
+                    <li><a href="../../Writer/Index" id="dashboardItem"><i class="fas fa-tachometer-alt"></i> داشبورد</a></li>
+                    <li><a href="../../Writer/ListPosts" id="postItem"><i class="fas fa-file-alt"></i> پست‌ها</a></li>
+                    <li><a href="../../Writer/ListCategories" id="categoryItem"><i class="fas fa-tag"></i> دسته‌بندی‌ها</a></li>
+                    <li><a href="../../Writer/ListTags" id="tagItem"><i class="fas fa-tags"></i> تگ‌ها</a></li>
+                    <li><a href="../../Writer/ListFiles" id="fileItem"><i class="fas fa-upload"></i> فایل‌های آپلود شده</a></li>
                 </ul>
             </nav>
 
@@ -44,6 +44,7 @@
         </div>
     </div>
     <!-- اسکریپت‌های Bootstrap -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     @RenderSection("BottomJS", false)
 </body>

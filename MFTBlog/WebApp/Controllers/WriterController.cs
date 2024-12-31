@@ -4,7 +4,6 @@ using DAL.EF;
 using DAL.EF.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using WebApp.ViewModel;
 
 namespace WebApp.Controllers
@@ -49,9 +48,20 @@ namespace WebApp.Controllers
 		[Authorize(Roles = "Writer")]
 		public async Task<IActionResult> AddNewPost([FromBody] AddNewPostViewModel addNewPostViewModel)
 		{
+			
 			if (!ModelState.IsValid)
 			{
-				return BadRequest(ModelState);
+				string errorMsg = "";
+
+				foreach (var state in ModelState)
+				{
+					foreach (var error in state.Value.Errors)
+					{
+						errorMsg += error.ErrorMessage;
+					}
+				}
+
+				return Json(new { successful = false, message = errorMsg });
 			}
 
 			var postViewModel = new PostViewModel

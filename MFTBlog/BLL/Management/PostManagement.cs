@@ -27,13 +27,17 @@ namespace BLL.Management
 				var post = new Post()
 				{
 					Author = await UserRepository.GetByIdAsync(postViewModel.AuthorId),
-					Category = await CategoryRepository.GetByIdAsync(postViewModel.CategoryId),
 					CreatedAt = DateTime.Now,
 					HtmlContent = postViewModel.HtmlContent,
 					Title = postViewModel.Title,
 					Tags = await TagRepository.GetAllByIdList(postViewModel.TagIdList)
 				};
-				
+
+				if (postViewModel.CategoryId.HasValue)
+				{
+					post.Category = await CategoryRepository.GetByIdAsync(postViewModel.CategoryId.Value);
+				}
+
 				await this.PostRepository.AddAsync(post);
 
 				return new ResultEntityViewModel<Post>

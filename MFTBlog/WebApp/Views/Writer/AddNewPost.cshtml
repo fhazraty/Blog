@@ -82,7 +82,7 @@
         });
 
 
-            $(document).ready(function() {
+            
             $("#categoriesTreeList").kendoTreeList({
                 dataSource: {
                     transport: {
@@ -112,7 +112,6 @@
                 sortable: true,
                 filterable: true
             });
-        });
 
             $("#editor").kendoEditor({
                 stylesheets: ["../content/shared/styles/editor.css"],
@@ -173,11 +172,23 @@
                 ]
             });
 
-            // Attach click event handler to save button
             $('#saveButton').on('click', function() {
+                
+                var treeList = $("#categoriesTreeList").data("kendoTreeList");
+                var selectedRow = treeList.select();
+                var selectedCategory = treeList.dataItem(selectedRow);
+                var tagsvalues = $("#tag-multiselect").getKendoMultiSelect().value();
+
+                var selectedCategoryId = null
+                if(selectedCategory != null){
+                    selectedCategoryId = selectedCategory.id
+                }
+
                 var postData = JSON.stringify({
                     title: $('#PostTitle').val(),
-                    htmlContent: $("#editor").data("kendoEditor").value()
+                    htmlContent: $("#editor").data("kendoEditor").value(),
+                    CategoryId: selectedCategoryId,
+                    TagIdList: tagsvalues
                 });
 
                 $.ajax({
@@ -186,11 +197,15 @@
                     contentType: 'application/json',
                     data: postData,
                     success: function(response) {
-                        // Handle success
-                        alert('پست با موفقیت ذخیره شد');
+                        if(response.successful){
+                           alert('پست با موفقیت ذخیره شد');
+                           window.location.assign("../../Writer/ListPosts")
+                        }
+                        else{
+                            alert(response.message);
+                        }
                     },
                     error: function(xhr, status, error) {
-                        // Handle error
                         alert('خطا در ذخیره پست');
                     }
                 });

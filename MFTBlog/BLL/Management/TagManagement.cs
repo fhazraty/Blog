@@ -17,7 +17,7 @@ namespace BLL.Management
 			{
 				var tag = new Tag
 				{
-					Name = tagViewModel.TagName
+					Name = tagViewModel.Name
 				};
 				
 				await TagRepository.AddAsync(tag);
@@ -42,7 +42,8 @@ namespace BLL.Management
 			var tags = await TagRepository.GetAllAsync();
 			return tags.Select(tag => new TagViewModel
 			{
-				TagName = tag.Name
+				Id = tag.Id,
+				Name = tag.Name
 			}).ToList();
 		}
 	}

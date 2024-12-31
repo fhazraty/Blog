@@ -2,6 +2,7 @@
 {
 	public class TagViewModel
 	{
-		public string TagName { get; set; }
+		public int Id { get; set; }
+		public string Name { get; set; }
 	}
 }

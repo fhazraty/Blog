@@ -19,23 +19,16 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
+                                    <th>ردیف</th>
                                     <th>عنوان پست</th>
+                                    <th>نویسنده</th>
                                     <th>دسته‌بندی</th>
-                                    <th>تگ‌ها</th>
+                                    <th>تاریخ درج</th>
                                     <th>عملیات</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>عنوان نمونه</td>
-                                    <td>تکنولوژی</td>
-                                    <td>برنامه‌نویسی، AI</td>
-                                    <td>
-                                        <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> ویرایش</button>
-                                        <button class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i> حذف</button>
-                                    </td>
-                                </tr>
-                                <!-- سایر ردیف‌ها -->
+                            <tbody id="postsTableBody">
+                                <!-- Data will be populated here by jQuery -->
                             </tbody>
                         </table>
                         <!-- Pagination -->
@@ -61,6 +54,38 @@
     <script>
         $(document).ready(function() {
             $('#postItem').toggleClass('active',500);
-        })
+            
+            getPosts(1,10);
+        });
+		
+        function getPosts(page, perpage) {
+
+            $.ajax({
+                url: '/Writer/ListPostsData?page=' + page + "&perpage=" + perpage,
+                type: 'POST',
+                success: function(data) {
+                    var postsTableBody = $('#postsTableBody');
+                    debugger;
+                    postsTableBody.empty();
+                    $.each(data.posts, function(index, post) {
+                        var row = '<tr>' +
+                            '<td>' + post.rowIndex + '</td>' +
+                            '<td>' + post.title + '</td>' +
+                            '<td>' + post.authorName + '</td>' +
+                            '<td>' + post.categoryName + '</td>' +
+                            '<td>' + post.persianInsertationDateTime + '</td>' +
+                            '<td>' +
+                                '<button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> ویرایش</button> ' +
+                                '<button class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i> حذف</button>' +
+                            '</td>' +
+                            '</tr>';
+                        postsTableBody.append(row);
+                    });
+                },
+                error: function() {
+                    alert('Error loading posts data.');
+                }
+            });
+		}   
     </script>
 }

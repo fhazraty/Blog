@@ -18,7 +18,8 @@ namespace WebApp.Controllers
 			var context = new BlogContext();
 			PostManagement =
 				new PostManagement(
-					new PostRepository(context), 
+					new PostRepository(context),
+					new PostRepository(new BlogContext()),
 					new UserRepository(context), 
 					new CategoryRepository(context), 
 					new TagRepository(context));
@@ -37,6 +38,24 @@ namespace WebApp.Controllers
 		public IActionResult ListPosts()
 		{
 			return View();
+		}
+		[HttpPost]
+		[Authorize(Roles = "Writer")]
+		public async Task<IActionResult> ListPostsData(int page, int perpage)
+		{
+			int counter = 0;
+
+			var posts = await PostManagement.ListPost(page, perpage);
+
+			var tasks = posts.Item1.Select(async post =>
+			{
+				post.PersianInsertationDateTime = await ConvertToPersianDateTime(post.InsertationDateTime);
+				return post;
+			}).ToList();
+
+			await Task.WhenAll(tasks);
+
+			return Json(new { successful = true, posts = posts.Item1, postscount = posts.Item2 });
 		}
 		[HttpGet]
 		[Authorize(Roles = "Writer")]

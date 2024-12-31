@@ -6,16 +6,19 @@ namespace BLL.Management
 {
 	public class PostManagement : IPostManagement
 	{
-		public IPostRepository PostRepository { get; set; }
+		public IPostRepository PostRepository1 { get; set; }
+		public IPostRepository PostRepository2 { get; set; }
 		public IUserRepository UserRepository { get; set; }
 		public ICategoryRepository CategoryRepository { get; set; }
 		public ITagRepository TagRepository { get; set; }
-		public PostManagement(IPostRepository postRepository,
+		public PostManagement(IPostRepository postRepository1,
+			IPostRepository postRepository2,
 			IUserRepository userRepository,
 			ICategoryRepository categoryRepository,
 			ITagRepository tagRepository)
 		{
-			this.PostRepository = postRepository;
+			this.PostRepository1 = postRepository1;
+			this.PostRepository2 = postRepository2;
 			this.UserRepository = userRepository;
 			this.CategoryRepository = categoryRepository;
 			this.TagRepository = tagRepository;
@@ -38,7 +41,7 @@ namespace BLL.Management
 					post.Category = await CategoryRepository.GetByIdAsync(postViewModel.CategoryId.Value);
 				}
 
-				await this.PostRepository.AddAsync(post);
+				await this.PostRepository1.AddAsync(post);
 
 				return new ResultEntityViewModel<Post>
 				{
@@ -54,6 +57,26 @@ namespace BLL.Management
 					Exception = ex
 				};
 			}
+		}
+		public async Task<(List<PostListViewModel>,int)> ListPost(int page, int perPage)
+		{
+			var getPageCountTask = this.PostRepository1.GetPostsCount();
+			var getPostsTask = this.PostRepository2.GetPosts(page, perPage);
+
+			await Task.WhenAll(getPageCountTask, getPostsTask);
+
+			int pageCount = await getPageCountTask;
+			var posts = await getPostsTask;
+
+			return (posts.Select((p, index) => new PostListViewModel
+			{
+				Id = p.Id,
+				Title = p.Title,
+				AuthorName = p.Author?.FirstName + " " + p.Author?.LastName,
+				CategoryName = p.Category?.Name,
+				InsertationDateTime = p.CreatedAt,
+				RowIndex = index + 1
+			}).ToList(), pageCount);
 		}
 	}
 }

@@ -16,7 +16,7 @@ namespace DAL.EF.Repository
 				.Include(p => p.Author)
 				.Include(p => p.Category)
 				.Include(p => p.Tags)
-				.OrderBy(p => p.CreatedAt)
+				.OrderByDescending(p => p.CreatedAt)
 				.Skip((page - 1) * perpage)
 				.Take(perpage)
 				.ToListAsync();

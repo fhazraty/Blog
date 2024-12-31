@@ -75,7 +75,7 @@ namespace BLL.Management
 				AuthorName = p.Author?.FirstName + " " + p.Author?.LastName,
 				CategoryName = p.Category?.Name,
 				InsertationDateTime = p.CreatedAt,
-				RowIndex = index + 1
+				RowIndex = ((page-1) * perPage) + index + 1
 			}).ToList(), pageCount);
 		}
 	}

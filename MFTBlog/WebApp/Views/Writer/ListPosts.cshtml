@@ -49,18 +49,15 @@
 {
     <script>
         var currentPage = 1;
-        //var totalPages = 50; // این مقدار باید به صورت داینامیک مقداردهی شود
         var maxPagesToShow = 10;
 
         function getPosts(page, perpage) {
-             //if (page < 1 || page > totalPages) return;
-             currentPage = page;
+            currentPage = page;
 
             $.ajax({
                 url: '/Writer/ListPostsData?page=' + page + "&perpage=" + perpage,
                 type: 'POST',
                 success: function(data) {
-
                     window.totalPages = Math.ceil(data.postscount / maxPagesToShow);
 
                     var postsTableBody = $('#postsTableBody');
@@ -76,7 +73,7 @@
                                 <td>${post.persianInsertationDateTime}</td>
                                 <td>
                                     <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> ویرایش</button>
-                                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i> حذف</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deletePost(${post.id})"><i class="fas fa-trash-alt"></i> حذف</button>
                                 </td>
                             </tr>`;
                         postsTableBody.append(row);
@@ -86,6 +83,27 @@
                 },
                 error: function() {
                     alert('خطا در بارگذاری داده‌های پست.');
+                }
+            });
+        }
+
+        function deletePost(postId) {
+            if (!confirm('آیا از حذف این پست مطمئن هستید؟')) return;
+
+            $.ajax({
+                url: '/Writer/DeletePost',
+                type: 'DELETE',
+                data: { id: postId },
+                success: function(response) {
+                    if (response.successful) {
+                        alert('پست با موفقیت حذف شد.');
+                        getPosts(currentPage, 10);
+                    } else {
+                        alert('خطا در حذف پست.');
+                    }
+                },
+                error: function() {
+                    alert('خطا در حذف پست.');
                 }
             });
         }

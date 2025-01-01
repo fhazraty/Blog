@@ -58,7 +58,7 @@ namespace BLL.Management
 				};
 			}
 		}
-		public async Task<(List<PostListViewModel>,int)> ListPost(int page, int perPage)
+		public async Task<(List<PostListViewModel>, int)> ListPost(int page, int perPage)
 		{
 			var getPageCountTask = this.PostRepository1.GetPostsCount();
 			var getPostsTask = this.PostRepository2.GetPosts(page, perPage);
@@ -75,8 +75,41 @@ namespace BLL.Management
 				AuthorName = p.Author?.FirstName + " " + p.Author?.LastName,
 				CategoryName = p.Category?.Name,
 				InsertationDateTime = p.CreatedAt,
-				RowIndex = ((page-1) * perPage) + index + 1
+				RowIndex = ((page - 1) * perPage) + index + 1
 			}).ToList(), pageCount);
 		}
+		public async Task<ResultViewModel> DeletePost(int postId)
+		{
+			try
+			{
+				var post = await this.PostRepository1.GetByIdAsync(postId);
+				if (post == null)
+				{
+					return new ResultEntityViewModel<string>
+					{
+						IsSuccessful = false,
+						Entity = "پست یافت نشد!"
+					};
+				}
+
+				await this.PostRepository1.DeleteAsync(postId);
+
+				return new ResultEntityViewModel<int>
+				{
+					IsSuccessful = true,
+					Entity = postId,
+					Message = "پست با موفقیت حذف شد."
+				};
+			}
+			catch (Exception ex)
+			{
+				return new ResultEntityViewModel<Exception>
+				{
+					IsSuccessful = false,
+					Exception = ex
+				};
+			}
+		}
+
 	}
 }

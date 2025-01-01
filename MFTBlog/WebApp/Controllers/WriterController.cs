@@ -63,6 +63,9 @@ namespace WebApp.Controllers
 		{
 			return View();
 		}
+
+
+
 		[HttpPost]
 		[Authorize(Roles = "Writer")]
 		public async Task<IActionResult> AddNewPost([FromBody] AddNewPostViewModel addNewPostViewModel)
@@ -156,6 +159,21 @@ namespace WebApp.Controllers
 		public IActionResult ListFiles()
 		{
 			return View();
+		}
+		
+		[HttpDelete]
+		[Authorize(Roles = "Writer")]
+		public async Task<IActionResult> DeletePost(int id)
+		{
+			try
+			{
+				var result = await PostManagement.DeletePost(id);
+				return Json(new { successful = true });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { successful = false, message = "خطا رخ داده است!" });
+			}
 		}
 	}
 }

@@ -110,6 +110,89 @@ namespace BLL.Management
 				};
 			}
 		}
+		public async Task<ResultViewModel> GetPostById(int postId)
+		{
+			try
+			{
+				var post = await this.PostRepository1.GetByIdAsync(postId);
+				if (post == null)
+				{
+					return new ResultEntityViewModel<Exception>
+					{
+						IsSuccessful = false,
+						Exception = new KeyNotFoundException("پست یافت نشد!"),
+						Message = "پست یافت نشد!"
+					};
+				}
 
+				var postViewModel = new PostViewModel
+				{
+					AuthorId = post.AuthorId,
+					Title = post.Title,
+					HtmlContent = post.HtmlContent,
+					TagIdList = post.Tags.Select(t => t.Id).ToList(),
+					CategoryId = post.CategoryId
+				};
+
+				return new ResultEntityViewModel<PostViewModel>
+				{
+					IsSuccessful = true,
+					Entity = postViewModel
+				};
+			}
+			catch (Exception ex)
+			{
+				return new ResultEntityViewModel<Exception>
+				{
+					IsSuccessful = false,
+					Exception = ex
+				};
+			}
+		}
+		public async Task<ResultViewModel> UpdatePost(PostViewModel postViewModel)
+		{
+			try
+			{
+				var post = await this.PostRepository1.GetByIdAsync(postViewModel.Id);
+				if (post == null)
+				{
+					return new ResultEntityViewModel<string>
+					{
+						IsSuccessful = false,
+						Entity = "پست یافت نشد!"
+					};
+				}
+
+				post.Title = postViewModel.Title;
+				post.HtmlContent = postViewModel.HtmlContent;
+				post.Author = await UserRepository.GetByIdAsync(postViewModel.AuthorId);
+				post.Tags = await TagRepository.GetAllByIdList(postViewModel.TagIdList);
+
+				if (postViewModel.CategoryId.HasValue)
+				{
+					post.Category = await CategoryRepository.GetByIdAsync(postViewModel.CategoryId.Value);
+				}
+				else
+				{
+					post.Category = null;
+				}
+
+				await this.PostRepository1.UpdateAsync(post);
+
+				return new ResultEntityViewModel<Post>
+				{
+					IsSuccessful = true,
+					Entity = post
+				};
+			}
+			catch (Exception ex)
+			{
+				return new ResultEntityViewModel<Exception>
+				{
+					IsSuccessful = false,
+					Exception = ex
+				};
+			}
+		}
 	}
 }

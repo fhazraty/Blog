@@ -72,7 +72,7 @@
                                 <td>${post.categoryName}</td>
                                 <td>${post.persianInsertationDateTime}</td>
                                 <td>
-                                    <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> ویرایش</button>
+                                    <button class="btn btn-primary btn-sm" onclick="redirectToEditPost(${post.id})"><i class="fas fa-edit"></i> ویرایش</button>
                                     <button class="btn btn-danger btn-sm" onclick="deletePost(${post.id})"><i class="fas fa-trash-alt"></i> حذف</button>
                                 </td>
                             </tr>`;
@@ -85,6 +85,10 @@
                     alert('خطا در بارگذاری داده‌های پست.');
                 }
             });
+        }
+
+        function redirectToEditPost(postId) {
+            window.location.href = `/Writer/EditPost?id=${postId}`;
         }
 
         function deletePost(postId) {

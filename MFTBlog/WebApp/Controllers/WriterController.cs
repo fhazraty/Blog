@@ -64,8 +64,6 @@ namespace WebApp.Controllers
 			return View();
 		}
 
-
-
 		[HttpPost]
 		[Authorize(Roles = "Writer")]
 		public async Task<IActionResult> AddNewPost([FromBody] AddNewPostViewModel addNewPostViewModel)
@@ -108,6 +106,10 @@ namespace WebApp.Controllers
 
 			return Json(new { successful = false, message = errorMessage });
 		}
+
+
+
+
 
 		[HttpGet]
 		public async Task<IActionResult> GetTags()
@@ -174,6 +176,66 @@ namespace WebApp.Controllers
 			{
 				return Json(new { successful = false, message = "خطا رخ داده است!" });
 			}
+		}
+		[HttpGet]
+		[Authorize(Roles = "Writer")]
+		public async Task<IActionResult> GetPostDetails(int id)
+		{
+			var post = await PostManagement.GetPostById(id);
+			
+			if (post == null)
+			{
+				return Json(new { successful = false, message = "Post not found." });
+			}
+
+			var postData = (ResultEntityViewModel<PostViewModel>)post;
+
+			if (postData.IsSuccessful)
+			{
+				return Json(new { successful = true, post = postData.Entity });
+			}
+
+			return Json(new { successful = false });
+		}
+		[HttpGet]
+		[Authorize(Roles = "Writer")]
+		public IActionResult EditPost(int id)
+		{
+			ViewBag.PostId = id;
+
+			return View("EditPost");
+		}
+		[HttpPost]
+		[Authorize(Roles = "Writer")]
+		public async Task<IActionResult> UpdatePost([FromBody] PostViewModel postViewModel)
+		{
+			if (!ModelState.IsValid)
+			{
+				string errorMsg = "";
+
+				foreach (var state in ModelState)
+				{
+					foreach (var error in state.Value.Errors)
+					{
+						errorMsg += error.ErrorMessage;
+					}
+				}
+
+				return Json(new { successful = false, message = errorMsg });
+			}
+
+			var result = await PostManagement.UpdatePost(postViewModel);
+
+			if (result.IsSuccessful)
+			{
+				return Json(new { successful = true });
+			}
+
+			var errorMessage = result is ResultEntityViewModel<Exception> exceptionResult
+				? exceptionResult.Message
+				: "An error occurred while updating the post.";
+
+			return Json(new { successful = false, message = errorMessage });
 		}
 	}
 }

@@ -1,0 +1,171 @@
+﻿@{
+    ViewData["Title"] = "ویرایش پست";
+    Layout = "/Views/Shared/_WriterLayout.cshtml";
+}
+
+<div class="mt-4 content">
+    <div class="container mt-3">
+        <div class="form-group w-100">
+            <label for="PostTitle" class="mr-2">عنوان صفحه:</label>
+            <input type="text" id="PostTitle" name="PostTitle" class="form-control mb-2" placeholder="عنوان پست">
+        </div>
+        <div class="k-rtl">
+            <div id="editorSection" class="demo-section wide w-100 mb-2">
+                <textarea id="editor" rows="10" cols="30" class="form-control" style="height:350px" aria-label="editor"></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div id="categoriesTreeList"></div>
+            </div>
+            <div class="col-6">
+                <div id="tag-multiselect"></div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end mt-3">
+            <button id="updateButton" class="btn btn-success">به‌روزرسانی</button>
+        </div>
+    </div>
+</div>
+
+@section HeaderCSS {
+    <link href="~/lib/kendo/css/web/default-main.css" rel="stylesheet" />
+    <style>
+        span.k-treelist-toggle.k-icon.k-svg-icon.k-svg-i-caret-alt-right {
+            transform: rotate(180deg);
+        }
+    </style>
+}
+
+@section BottomJS {
+    <script src="~/lib/kendo/js/kendo.all.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#postItem').toggleClass('active', 500);
+
+            $("#tag-multiselect").kendoMultiSelect({
+                autoClose: false,
+                dataTextField: "name",
+                dataValueField: "id",
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "../Writer/GetTags",
+                            dataType: "json"
+                        }
+                    }
+                },
+                tagMode: "multiple"
+            });
+
+            $("#categoriesTreeList").kendoTreeList({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "../Writer/GetCategories",
+                            dataType: "json"
+                        }
+                    },
+                    schema: {
+                        model: {
+                            id: "id",
+                            parentId: "parentCategoryId",
+                            fields: {
+                                id: { type: "number", nullable: false },
+                                parentCategoryId: { nullable: true },
+                                name: { type: "string" }
+                            },
+                            expanded: true
+                        }
+                    }
+                },
+                columns: [
+                    { field: "name", title: "نام دسته" }
+                ],
+                selectable: "row",
+                height: 150,
+                sortable: true,
+                filterable: true
+            });
+
+            $("#editor").kendoEditor({
+                stylesheets: ["../content/shared/styles/editor.css"],
+                tools: [
+                    "bold", "italic", "underline", "justifyLeft", "justifyCenter", "justifyRight",
+                    "insertUnorderedList", "insertOrderedList", "indent", "outdent", "createLink",
+                    "unlink", "insertImage", "viewHtml", "formatting"
+                ]
+            });
+
+            // دریافت اطلاعات پست برای پر کردن فرم
+            var postId = '@ViewBag.PostId'; // شناسه پست
+            $.ajax({
+                url: '../Writer/GetPostDetails',
+                type: 'GET',
+                data: { id: postId },
+                success: function(response) {
+                    if (response.successful) {
+                        var post = response.post;
+                        $('#PostTitle').val(post.title);
+                        $("#editor").data("kendoEditor").value(post.htmlContent);
+
+                        // انتخاب دسته‌بندی
+                        var treeList = $("#categoriesTreeList").data("kendoTreeList");
+                        // صبر برای بارگذاری داده‌های TreeList
+                        treeList.dataSource.fetch(function() {
+                            var dataItem = treeList.dataSource.get(post.categoryId);
+                            if (dataItem) {
+                                var row = treeList.table.find("tr[data-uid='" + dataItem.uid + "']");
+                                treeList.select(row);
+                            }
+                        });
+
+                        // انتخاب تگ‌ها
+                        $("#tag-multiselect").getKendoMultiSelect().value(post.tagIdList);
+                    } else {
+                        alert('خطا در دریافت اطلاعات پست.');
+                    }
+                },
+                error: function() {
+                    alert('خطا در دریافت اطلاعات پست.');
+                }
+            });
+
+            // ذخیره تغییرات
+            $('#updateButton').on('click', function() {
+                var treeList = $("#categoriesTreeList").data("kendoTreeList");
+                var selectedRow = treeList.select();
+                var selectedCategory = treeList.dataItem(selectedRow);
+                var tagsvalues = $("#tag-multiselect").getKendoMultiSelect().value();
+
+                var selectedCategoryId = selectedCategory ? selectedCategory.id : null;
+
+                var postData = JSON.stringify({
+                    id: postId,
+                    title: $('#PostTitle').val(),
+                    htmlContent: $("#editor").data("kendoEditor").value(),
+                    CategoryId: selectedCategoryId,
+                    TagIdList: tagsvalues
+                });
+
+                $.ajax({
+                    url: '../Writer/UpdatePost',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: postData,
+                    success: function(response) {
+                        if (response.successful) {
+                            alert('پست با موفقیت به‌روزرسانی شد');
+                            window.location.assign("../../Writer/ListPosts");
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('خطا در به‌روزرسانی پست.');
+                    }
+                });
+            });
+        });
+    </script>
+}

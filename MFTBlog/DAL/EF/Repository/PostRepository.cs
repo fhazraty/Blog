@@ -26,5 +26,12 @@ namespace DAL.EF.Repository
 		{
 			return await _dbSet.CountAsync();
 		}
+
+		public async Task<Post?> GetByIdAsync(int id)
+		{
+			return await _dbSet
+				.Include(p => p.Tags)
+				.FirstOrDefaultAsync(p => p.Id == id);
+		}
 	}
 }

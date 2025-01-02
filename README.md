@@ -71,6 +71,10 @@ Contributions are welcome! Please fork the repository and submit a pull request 
 
 پروژه نشان می‌دهد که چگونه می‌توان یک برنامه وبلاگ مدرن را با استفاده از ASP.NET Core برای بک‌اند و EF Core برای عملیات پایگاه‌داده ساخت. ASP.NET Core قابلیت‌های چندسکویی و عملکرد بالا را فراهم می‌کند، در حالی که EF Core ارتباط با پایگاه‌داده را از طریق اشیاء .NET آسان می‌کند.
 
+هدف از ایجاد این پروژه آموزش الگوی Repository در کلاس های مجتمع فنی تهران شعبه استان البرز - آزادگان می باشد.
+
+
+
 ## ویژگی‌ها
 
 - مدیریت پست‌ها: ایجاد، ویرایش و حذف پست‌ها.
@@ -85,7 +89,7 @@ Contributions are welcome! Please fork the repository and submit a pull request 
 - .NET 9.0 SDK
 - SQL Server یا هر پایگاه‌داده پشتیبانی‌شده
 - Visual Studio یا هر IDE دیگر برای توسعه .NET
-
+(پیشنهاد می گردد برای ساده سازی فرآیند راه اندازی از Visual Studio 2022 استفاده نمایید.)
 ### نصب
 
 1. مخزن را کلون کنید:
@@ -100,7 +104,7 @@ Contributions are welcome! Please fork the repository and submit a pull request 
    ```bash
    dotnet restore
    ```
-4. مهاجرت‌های پایگاه‌داده را به‌روزرسانی کنید:
+4. مهاجرت‌های پایگاه‌داده را به‌روزرسانی کنید. دقت کنید که Connectionstring در فایل BlogContext.cs باید به پایگاه داده شما اشاره کند. 
    ```bash
    dotnet ef database update
    ```

@@ -127,6 +127,7 @@ namespace WebApp.Controllers
 		}
 
 
+
 		[HttpGet]
 		public async Task<IActionResult> GetCategories()
 		{
@@ -236,6 +237,25 @@ namespace WebApp.Controllers
 				: "An error occurred while updating the post.";
 
 			return Json(new { successful = false, message = errorMessage });
+		}
+
+		[HttpDelete]
+		[Authorize(Roles = "Writer")]
+		public async Task<IActionResult> DeleteCategory(int id)
+		{
+			try
+			{
+				var result = await CategoryManagement.DeleteCategoryAsync(id);
+				if (result.IsSuccessful)
+				{
+					return Json(new { successful = true });
+				}
+				return Json(new { successful = false, message = result.Message });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { successful = false, message = "An error occurred while deleting the category." });
+			}
 		}
 	}
 }

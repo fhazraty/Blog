@@ -1,18 +1,125 @@
 ﻿@{
-    ViewData["Title"] = "لیست دسته بندی ها";
+    ViewData["Title"] = "مدیریت دسته‌بندی‌ها";
     Layout = "/Views/Shared/_WriterLayout.cshtml";
 }
 
 <div class="mt-4 content" id="dashboard">
-    <h2>لیست دسته بندی ها</h2>
-    <p>لیست دسته بندی ها</p>
+    <h2>مدیریت دسته‌بندی‌ها</h2>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div><i class="fas fa-table me-1"></i> دسته‌بندی‌ها</div>
+                        <div>
+                            <a class="btn btn-success btn-sm" href="../../Writer/AddNewCategory"><i class="fas fa-plus"></i> افزودن دسته جدید</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="categoriesTreeList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-@section BottomJS
-{
+@section HeaderCSS {
+    <link href="~/lib/kendo/css/web/default-main.css" rel="stylesheet" />
+    <style>
+        span.k-treelist-toggle.k-icon.k-svg-icon.k-svg-i-caret-alt-right {
+            transform: rotate(180deg);
+        }
+    </style>
+}
+
+@section BottomJS {
+    <script src="~/lib/kendo/js/kendo.all.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $('#categoryItem').toggleClass('active',500);
-        })
+        $(document).ready(function () {
+            // Initialize TreeList
+            $("#categoriesTreeList").kendoTreeList({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "../Writer/GetCategories",
+                            dataType: "json"
+                        },
+                        update: {
+                            url: "/Writer/UpdateCategory",
+                            type: "POST",
+                            dataType: "json"
+                        },
+                        // destroy: {
+                        //     url: "/Writer/DeleteCategory",
+                        //     type: "DELETE",
+                        //     dataType: "json"
+                        // },
+                        parameterMap: function (data, operation) {
+                            if (operation !== "read") {
+                                return JSON.stringify(data);
+                            }
+                        }
+                    },
+                    schema: {
+                        model: {
+                            id: "id",
+                            parentId: "parentCategoryId",
+                            fields: {
+                                id: { type: "number", nullable: false },
+                                parentCategoryId: { field: "parentCategoryId", nullable: true },
+                                name: { field: "name", type: "string" }
+                            },
+                            expanded: true
+                        }
+                    }
+                },
+                columns: [
+                    { field: "name", title: "نام دسته‌بندی", width: "40%" },
+                    {
+                        command: [
+                            { name: "edit", text: "ویرایش" },
+                            { name: "destroy", text: "حذف" }
+                        ],
+                        title: "عملیات",
+                        width: "20%"
+                    }
+                ],
+                editable: "inline",
+                selectable: "row", // افزودن قابلیت انتخاب ردیف
+                navigatable: true, // فعال‌سازی قابلیت ناوبری
+                height: 400,
+                sortable: true,
+                filterable: true,
+                save: function (e) {
+                    // دریافت اطلاعات ردیف تغییر یافته
+                    console.log("ردیف ذخیره شد:");
+                    console.log("ID:", e.model.id); // دریافت ID
+                    console.log("نام جدید:", e.model.name); // دریافت مقدار جدید فیلد name
+                },
+                remove: function (e) {
+                    debugger;
+                    // ارسال درخواست حذف به سرور
+                    $.ajax({
+                        url: '/Writer/DeleteCategory?id=' + e.model.id,
+                        type: 'DELETE',
+                        success: function (result) {
+                            if (!result.successful) {
+                                alert(result.message);
+                            }
+                            
+                            $("#categoriesTreeList").data("kendoTreeList").dataSource.read();
+                            $("#categoriesTreeList").data("kendoTreeList").refresh();
+                        },
+                        error: function (error) {
+                            alert("خطا در حذف دسته‌بندی:" + error);
+                            
+                            $("#categoriesTreeList").data("kendoTreeList").dataSource.read();
+                            $("#categoriesTreeList").data("kendoTreeList").refresh();
+                        }
+                    });
+                }
+            });
+        });
     </script>
 }

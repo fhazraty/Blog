@@ -8,5 +8,14 @@ namespace DAL.EF.Repository
 		public CategoryRepository(DbContext context) : base(context)
 		{
 		}
+		public async Task<Category?> GetByIdAsync(int id)
+		{
+			return 
+				await 
+				_dbSet
+				.Include(c => c.Posts)
+				.Include(c => c.SubCategories)
+				.FirstOrDefaultAsync(c => c.Id == id);
+		}
 	}
 }

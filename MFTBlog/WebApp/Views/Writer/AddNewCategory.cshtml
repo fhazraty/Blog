@@ -1,0 +1,64 @@
+﻿@{
+    ViewData["Title"] = "اضافه کردن دسته بندی جدید";
+	Layout = "~/Views/Shared/_WriterLayout.cshtml";
+}
+
+<div class="mt-4 content" id="dashboard">
+    <h2>مدیریت دسته‌بندی‌ها</h2>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div><i class="fas fa-table me-1"></i> دسته‌بندی‌ها</div>
+                        <div>
+                            
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form id="addCategoryForm">
+                            <div class="form-group">
+                                <label for="categoryName">عنوان دسته بندی جدید</label>
+                                <input type="text" class="form-control" id="categoryName" name="categoryName" required />
+                            </div>
+                            <button type="submit" class="btn btn-primary">ذخیره</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section BottomJS {
+    <script>
+        $(document).ready(function () {
+            $('#addCategoryForm').on('submit', function (e) {
+                e.preventDefault();
+                var categoryName = $('#categoryName').val();
+                $.ajax({
+                    url: '/Writer/AddNewCategory',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ 
+                        name: categoryName,
+                        parentCategoryId: @ViewBag.ParentId
+                    }),
+                    success: function(response) {
+                        if(response.successful){
+                           alert('دسته بندی جدید با موفقیت ذخیره شد');
+                           window.location.assign("../../Writer/ListCategories")
+                        }
+                        else{
+                            alert(response.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert('خطا در ذخیره دسته بندی');
+                    }
+                });
+            });
+        });
+    </script>
+}

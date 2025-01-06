@@ -6,5 +6,6 @@ namespace BLL.Management
 	{
 		Task<IEnumerable<CategoryViewModel>> ListAllCategoriesAsync();
 		Task<ResultEntityViewModel<int>> DeleteCategoryAsync(int categoryId);
+		Task<ResultEntityViewModel<int>> AddNewCategoryAsync(CategoryViewModel categoryViewModel);
 	}
 }

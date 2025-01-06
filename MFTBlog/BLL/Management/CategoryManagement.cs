@@ -1,4 +1,5 @@
 ﻿using BLL.Model;
+using DAL.EF.Model;
 using DAL.EF.Repository;
 
 namespace BLL.Management
@@ -62,6 +63,59 @@ namespace BLL.Management
 				IsSuccessful = true,
 				Message = "حذف با موفقیت انجام شد!"
 			};
+		}
+		public async Task<ResultEntityViewModel<int>> AddNewCategoryAsync(CategoryViewModel categoryViewModel)
+		{
+			try
+			{
+				if (categoryViewModel.ParentCategoryId.HasValue)
+				{
+					if(categoryViewModel.ParentCategoryId != 0)
+					{
+						var parentCategory = await CategoryRepository.GetByIdAsync(categoryViewModel.ParentCategoryId.Value);
+						if (parentCategory == null)
+						{
+							return new ResultEntityViewModel<int>
+							{
+								IsSuccessful = false,
+								Entity = categoryViewModel.ParentCategoryId.Value,
+								Exception = new KeyNotFoundException(),
+								Message = "دسته بندی والد یافت نشد!"
+							};
+						}
+
+
+					}
+					else
+					{
+						categoryViewModel.ParentCategoryId = null;
+					}
+				}
+
+				var category = new Category
+				{
+					Name = categoryViewModel.Name,
+					ParentCategoryId = categoryViewModel.ParentCategoryId
+				};
+
+				await CategoryRepository.AddAsync(category);
+
+				return new ResultEntityViewModel<int>
+				{
+					Entity = category.Id,
+					IsSuccessful = true,
+					Message = "دسته بندی با موفقیت اضافه شد!"
+				};
+			}
+			catch (Exception ex)
+			{
+				return new ResultEntityViewModel<int>
+				{
+					Exception = ex,
+					IsSuccessful = false,
+					Message = ex.Message
+				};
+			}
 		}
 	}
 }

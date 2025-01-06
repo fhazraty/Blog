@@ -12,7 +12,7 @@
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <div><i class="fas fa-table me-1"></i> دسته‌بندی‌ها</div>
                         <div>
-                            <a class="btn btn-success btn-sm" href="../../Writer/AddNewCategory"><i class="fas fa-plus"></i> افزودن دسته جدید</a>
+                            <a id="addNewCategoryBtn" class="btn btn-success btn-sm" href="#"><i class="fas fa-plus"></i> افزودن دسته جدید</a>
                         </div>
                     </div>
                     <div class="card-body">
@@ -38,7 +38,7 @@
     <script>
         $(document).ready(function () {
             // Initialize TreeList
-            $("#categoriesTreeList").kendoTreeList({
+            var treeList = $("#categoriesTreeList").kendoTreeList({
                 dataSource: {
                     transport: {
                         read: {
@@ -50,11 +50,6 @@
                             type: "POST",
                             dataType: "json"
                         },
-                        // destroy: {
-                        //     url: "/Writer/DeleteCategory",
-                        //     type: "DELETE",
-                        //     dataType: "json"
-                        // },
                         parameterMap: function (data, operation) {
                             if (operation !== "read") {
                                 return JSON.stringify(data);
@@ -119,6 +114,13 @@
                         }
                     });
                 }
+            }).data("kendoTreeList");
+
+            $("#addNewCategoryBtn").click(function () {
+                var selectedRow = treeList.select();
+                var selectedDataItem = treeList.dataItem(selectedRow);
+                var parentCategoryId = selectedDataItem ? selectedDataItem.id : null;
+                window.location.href = "../../Writer/AddNewCategory?parentId=" + parentCategoryId;
             });
         });
     </script>

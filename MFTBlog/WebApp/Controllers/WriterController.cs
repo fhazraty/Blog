@@ -32,7 +32,6 @@ namespace WebApp.Controllers
 		{
 			return View();
 		}
-
 		[HttpGet]
 		[Authorize(Roles = "Writer")]
 		public IActionResult ListPosts()
@@ -63,7 +62,6 @@ namespace WebApp.Controllers
 		{
 			return View();
 		}
-
 		[HttpPost]
 		[Authorize(Roles = "Writer")]
 		public async Task<IActionResult> AddNewPost([FromBody] AddNewPostViewModel addNewPostViewModel)
@@ -106,18 +104,12 @@ namespace WebApp.Controllers
 
 			return Json(new { successful = false, message = errorMessage });
 		}
-
-
-
-
-
 		[HttpGet]
 		public async Task<IActionResult> GetTags()
 		{
 			var tags = await TagManagement.GetTags();
 			return Json(tags);
 		}
-
 		[HttpPost]
 		public IActionResult AddTag(TagViewModel tagViewModel)
 		{
@@ -125,9 +117,6 @@ namespace WebApp.Controllers
 
 			return Ok();
 		}
-
-
-
 		[HttpGet]
 		public async Task<IActionResult> GetCategories()
 		{
@@ -143,8 +132,6 @@ namespace WebApp.Controllers
 
 			return Json(categoryList);
 		}
-
-		
 		[HttpGet]
 		[Authorize(Roles = "Writer")]
 		public IActionResult ListCategories()
@@ -257,5 +244,47 @@ namespace WebApp.Controllers
 				return Json(new { successful = false, message = "An error occurred while deleting the category." });
 			}
 		}
+
+		[HttpGet]
+		[Authorize(Roles = "Writer")]
+		public IActionResult AddNewCategory(int parentId)
+		{
+			ViewBag.ParentId = parentId;
+
+			return View("AddNewCategory");
+		}
+		[HttpPost]
+		[Authorize(Roles = "Writer")]
+		public async Task<IActionResult> AddNewCategory([FromBody] WebApp.ViewModel.CategoryViewModel categoryViewModel)
+		{
+			if (!ModelState.IsValid)
+			{
+				string errorMsg = "";
+
+				foreach (var state in ModelState)
+				{
+					foreach (var error in state.Value.Errors)
+					{
+						errorMsg += error.ErrorMessage;
+					}
+				}
+
+				return Json(new { successful = false, message = errorMsg });
+			}
+
+			var result = await CategoryManagement.AddNewCategoryAsync(new BLL.Model.CategoryViewModel()
+			{
+				Name = categoryViewModel.Name,
+				ParentCategoryId = categoryViewModel.ParentCategoryId,
+			});
+
+			if (result.IsSuccessful)
+			{
+				return Json(new { successful = true });
+			}
+
+			return Json(new { successful = false, message = result.Message });
+		}
+		
 	}
 }

@@ -13,5 +13,12 @@ namespace DAL.EF.Repository
 		{
 			return await this._dbSet.Where(t => listId.Contains(t.Id)).ToListAsync();
 		}
+
+		public async Task<Tag?> GetByIdAsync(int id)
+		{
+			return _dbSet.
+				Include(t => t.Posts)
+				.FirstOrDefault(t => t.Id == id);
+		}
 	}
 }

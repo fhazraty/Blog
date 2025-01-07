@@ -111,12 +111,29 @@ namespace WebApp.Controllers
 			return Json(tags);
 		}
 		[HttpPost]
-		public IActionResult AddTag(TagViewModel tagViewModel)
+		public IActionResult AddTag([FromBody]WebApp.ViewModel.TagViewModel tagViewModel)
 		{
-			TagManagement.AddTag(tagViewModel);
+			try
+			{
+				TagManagement.AddTag(new BLL.Model.TagViewModel()
+				{
+					Id = tagViewModel.Id,
+					Name = tagViewModel.Name,
+				});
 
-			return Ok();
+				return Json(new { success = true });
+			}
+			catch (Exception ex)
+			{
+
+				return Json(new { success = false, message = ex.Message });
+			}		
 		}
+		
+
+
+
+
 		[HttpGet]
 		public async Task<IActionResult> GetCategories()
 		{
@@ -284,6 +301,25 @@ namespace WebApp.Controllers
 			}
 
 			return Json(new { successful = false, message = result.Message });
+		}
+		[HttpDelete]
+		[Authorize(Roles = "Writer")]
+		public async Task<IActionResult> DeleteTag([FromBody] WebApp.ViewModel.TagViewModel tagViewModel)
+		{
+			try
+			{
+				var result = await TagManagement.DeleteTag(tagViewModel.Id);
+
+				if (result.IsSuccessful)
+				{
+					return Json(new { success = true });
+				}
+				return Json(new { success = false, message = "برای حذف خطا رخ داده است!" });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { success = false, message = "برای حذف خطا رخ داده است!" });
+			}
 		}
 		
 	}

@@ -36,7 +36,6 @@ namespace BLL.Management
 				};
 			}
 		}
-
 		public async Task<List<TagViewModel>> GetTags()
 		{
 			var tags = await TagRepository.GetAllAsync();
@@ -46,5 +45,50 @@ namespace BLL.Management
 				Name = tag.Name
 			}).ToList();
 		}
+		public async Task<ResultViewModel> DeleteTag(int id)
+		{
+			try
+			{
+				var tag = await TagRepository.GetByIdAsync(id);
+				if (tag == null)
+				{
+					return new ResultEntityViewModel<int>()
+					{
+						Entity = id,
+						IsSuccessful = false,
+						Message = "کلید یافت نشد",
+						Exception = new KeyNotFoundException()
+					};
+				}
+
+				if (tag.Posts != null && tag.Posts.Any())
+				{
+					return new ResultEntityViewModel<int>()
+					{
+						Entity = id,
+						IsSuccessful = false,
+						Message = "یک یا چند پست وابسته به این تگ وجود دارد!",
+						Exception = new Exception("Tag has related posts and cannot be deleted")
+					};
+				}
+
+				await TagRepository.DeleteAsync(id);
+				return new ResultEntityViewModel<int>()
+				{
+					Entity = id,
+					IsSuccessful = true
+				};
+			}
+			catch (Exception ex)
+			{
+				return new ResultEntityViewModel<int>()
+				{
+					Entity = id,
+					Exception = ex,
+					IsSuccessful = false
+				};
+			}
+		}
+
 	}
 }

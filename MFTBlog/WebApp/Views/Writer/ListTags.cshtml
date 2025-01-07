@@ -1,20 +1,149 @@
 ﻿@{
-    ViewData["Title"] = "لیست تگ ها";
+    ViewData["Title"] = "مدیریت برچسب‌ها";
     Layout = "/Views/Shared/_WriterLayout.cshtml";
 }
 
 <div class="mt-4 content" id="dashboard">
-    <h2>لیست تگ ها</h2>
-    <p>لیست تگ ها</p>
+    <h2>مدیریت برچسب‌ها</h2>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div><i class="fas fa-tags me-1"></i> برچسب‌ها</div>
+                        <div>
+                            <a id="addNewTagBtn" class="btn btn-success btn-sm" href="#"><i class="fas fa-plus"></i> افزودن برچسب جدید</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="tagsGrid"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+@section HeaderCSS {
+    <link href="~/lib/kendo/css/web/default-main.css" rel="stylesheet" />
+    <style>
+        .k-grid .k-pager .k-link {
+            direction: ltr; /* تنظیم جهت فلش‌ها */
+            unicode-bidi: embed;
+        }
 
+        .k-pager .k-icon.k-i-arrow-60-left:before {
+            content: "\e824"; /* فلش مناسب برای راست */
+        }
 
-@section BottomJS
-{
+        .k-pager .k-icon.k-i-arrow-60-right:before {
+            content: "\e825"; /* فلش مناسب برای چپ */
+        }
+
+        .k-pager {
+            direction: ltr; /* تنظیم جهت کلی صفحه‌بندی */
+        }
+    </style>
+}
+
+@section BottomJS {
+    <script src="~/lib/kendo/js/kendo.all.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $('#tagItem').toggleClass('active',500);
-        })
+        $(document).ready(function () {
+            kendo.culture("fa-IR");
+            kendo.ui.Grid.prototype.options.messages = {
+            commands: {
+                create: "افزودن",
+                cancel: "لغو",
+                save: "ذخیره",
+                edit: "ویرایش",
+                update: "به‌روزرسانی",
+                destroy: "حذف",
+                canceledit: "لغو ویرایش"
+            }
+        };
+
+            var grid = $("#tagsGrid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "../Writer/GetTags",
+                            dataType: "json"
+                        },
+                        create: {
+                            url: "/Writer/AddTag",
+                            type: "POST",
+                            contentType: "application/json",
+                            dataType: "json"
+                        },
+                        update: {
+                            url: "/Writer/UpdateTag",
+                            type: "POST",
+                            contentType: "application/json",
+                            dataType: "json"
+                        },
+                        destroy: {
+                            url: "/Writer/DeleteTag",
+                            type: "DELETE",
+                            contentType: "application/json",
+                            dataType: "json"
+                        },
+                        parameterMap: function (data, operation) {
+                            if (operation !== "read") {
+                                return JSON.stringify({
+                                    id: data.id || 0,
+                                    name: data.name
+                                });
+                            }
+                            return data;
+                        }
+                    },
+                    schema: {
+                        model: {
+                            id: "id",
+                            fields: {
+                                id: { type: "number", editable: false, nullable: false },
+                                name: { type: "string", validation: { required: true } }
+                            }
+                        }
+                    },
+                    pageSize: 10,
+                    requestEnd: function (e) {
+                        // رفرش گرید پس از عملیات
+                        if (e.type === "create" || e.type === "update" || e.type === "destroy") {
+                            grid.dataSource.read(); // ارسال درخواست جدید به سرور
+                        }
+                    }
+                },
+                pageable: true,
+                sortable: true,
+                filterable: true,
+                editable: {
+                    mode: "inline",
+                    confirmation: "آیا مطمئن هستید که می‌خواهید این ردیف را حذف کنید؟",
+                    confirmDelete: "بله، حذف کن",
+                    cancelDelete: "لغو"
+                },
+                columns: [
+                    { field: "name", title: "نام برچسب", width: "70%" },
+                    {
+                        command: [
+                            { name: "edit", text: "ویرایش" },
+                            {
+                                name: "destroy",
+                                text: "حذف"
+                                
+                            }
+                        ],
+                        title: "عملیات",
+                        width: "30%"
+                    }
+                ]
+            }).data("kendoGrid");
+
+            $("#addNewTagBtn").click(function () {
+                grid.addRow();
+            });
+        });
     </script>
 }

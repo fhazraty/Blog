@@ -7,5 +7,6 @@ namespace BLL.Management
 		Task<ResultViewModel> AddTag(TagViewModel tagViewModel);
 		Task<List<TagViewModel>> GetTags();
 		Task<ResultViewModel> DeleteTag(int id);
+		Task<ResultViewModel> UpdateTag(TagViewModel tagViewModel);
 	}
 }

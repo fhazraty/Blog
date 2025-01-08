@@ -89,6 +89,39 @@ namespace BLL.Management
 				};
 			}
 		}
+		public async Task<ResultViewModel> UpdateTag(TagViewModel tagViewModel)
+		{
+			try
+			{
+				var tag = await TagRepository.GetByIdAsync(tagViewModel.Id);
+				if (tag == null)
+				{
+					return new ResultEntityViewModel<int>()
+					{
+						Entity = tagViewModel.Id,
+						IsSuccessful = false,
+						Message = "کلید یافت نشد",
+						Exception = new KeyNotFoundException()
+					};
+				}
 
+				tag.Name = tagViewModel.Name;
+				await TagRepository.UpdateAsync(tag);
+
+				return new ResultEntityViewModel<Tag>()
+				{
+					Entity = tag,
+					IsSuccessful = true
+				};
+			}
+			catch (Exception ex)
+			{
+				return new ResultEntityViewModel<Tag>()
+				{
+					Exception = ex,
+					IsSuccessful = false
+				};
+			}
+		}
 	}
 }

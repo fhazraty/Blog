@@ -32,6 +32,8 @@ namespace WebApp.Controllers
 		{
 			return View();
 		}
+
+		#region Posts
 		[HttpGet]
 		[Authorize(Roles = "Writer")]
 		public IActionResult ListPosts()
@@ -104,70 +106,6 @@ namespace WebApp.Controllers
 
 			return Json(new { successful = false, message = errorMessage });
 		}
-		[HttpGet]
-		public async Task<IActionResult> GetTags()
-		{
-			var tags = await TagManagement.GetTags();
-			return Json(tags);
-		}
-		[HttpPost]
-		public IActionResult AddTag([FromBody]WebApp.ViewModel.TagViewModel tagViewModel)
-		{
-			try
-			{
-				TagManagement.AddTag(new BLL.Model.TagViewModel()
-				{
-					Id = tagViewModel.Id,
-					Name = tagViewModel.Name,
-				});
-
-				return Json(new { success = true });
-			}
-			catch (Exception ex)
-			{
-
-				return Json(new { success = false, message = ex.Message });
-			}		
-		}
-		
-
-
-
-
-		[HttpGet]
-		public async Task<IActionResult> GetCategories()
-		{
-			var categories = await CategoryManagement.ListAllCategoriesAsync();
-			
-			var categoryList = categories.Select(c => new
-			{
-				Id = c.Id,
-				ParentCategoryId = c.ParentCategoryId,
-				Name = c.Name,
-				HasChildren = categories.Any(sub => sub.ParentCategoryId == c.Id)  // Check if has subcategories
-			}).ToList();
-
-			return Json(categoryList);
-		}
-		[HttpGet]
-		[Authorize(Roles = "Writer")]
-		public IActionResult ListCategories()
-		{
-			return View();
-		}
-		[HttpGet]
-		[Authorize(Roles = "Writer")]
-		public IActionResult ListTags()
-		{
-			return View();
-		}
-		[HttpGet]
-		[Authorize(Roles = "Writer")]
-		public IActionResult ListFiles()
-		{
-			return View();
-		}
-		
 		[HttpDelete]
 		[Authorize(Roles = "Writer")]
 		public async Task<IActionResult> DeletePost(int id)
@@ -187,7 +125,7 @@ namespace WebApp.Controllers
 		public async Task<IActionResult> GetPostDetails(int id)
 		{
 			var post = await PostManagement.GetPostById(id);
-			
+
 			if (post == null)
 			{
 				return Json(new { successful = false, message = "Post not found." });
@@ -243,6 +181,115 @@ namespace WebApp.Controllers
 			return Json(new { successful = false, message = errorMessage });
 		}
 
+		#endregion
+
+		#region Tags
+		[HttpPost]
+		public IActionResult AddTag([FromBody]WebApp.ViewModel.TagViewModel tagViewModel)
+		{
+			try
+			{
+				TagManagement.AddTag(new BLL.Model.TagViewModel()
+				{
+					Id = tagViewModel.Id,
+					Name = tagViewModel.Name,
+				});
+
+				return Json(new { success = true });
+			}
+			catch (Exception ex)
+			{
+
+				return Json(new { success = false, message = ex.Message });
+			}		
+		}
+		[HttpGet]
+		public async Task<IActionResult> GetTags()
+		{
+			var tags = await TagManagement.GetTags();
+			return Json(tags);
+		}
+		[HttpGet]
+		[Authorize(Roles = "Writer")]
+		public IActionResult ListTags()
+		{
+			return View();
+		}
+		[HttpDelete]
+		[Authorize(Roles = "Writer")]
+		public async Task<IActionResult> DeleteTag([FromBody] WebApp.ViewModel.TagViewModel tagViewModel)
+		{
+			try
+			{
+				var result = await TagManagement.DeleteTag(tagViewModel.Id);
+
+				if (result.IsSuccessful)
+				{
+					return Json(new { success = true });
+				}
+				return Json(new { success = false, message = "برای حذف خطا رخ داده است!" });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { success = false, message = "برای حذف خطا رخ داده است!" });
+			}
+		}
+		[HttpPut]
+		[Authorize(Roles = "Writer")]
+		public async Task<IActionResult> UpdateTag([FromBody] WebApp.ViewModel.TagUpdateViewModel tagViewModel)
+		{
+			if (!ModelState.IsValid)
+			{
+				string errorMsg = "";
+
+				foreach (var state in ModelState)
+				{
+					foreach (var error in state.Value.Errors)
+					{
+						errorMsg += error.ErrorMessage;
+					}
+				}
+
+				return Json(new { success = false, message = errorMsg });
+			}
+
+			var result = await TagManagement.UpdateTag(new BLL.Model.TagViewModel()
+			{
+				Id = tagViewModel.Id,
+				Name = tagViewModel.Name,
+			});
+
+			if (result.IsSuccessful)
+			{
+				return Json(new { success = true });
+			}
+
+			return Json(new { success = false, message = "خطا رخ داده است.!" });
+		}
+		#endregion
+
+		#region Categories
+		[HttpGet]
+		public async Task<IActionResult> GetCategories()
+		{
+			var categories = await CategoryManagement.ListAllCategoriesAsync();
+			
+			var categoryList = categories.Select(c => new
+			{
+				Id = c.Id,
+				ParentCategoryId = c.ParentCategoryId,
+				Name = c.Name,
+				HasChildren = categories.Any(sub => sub.ParentCategoryId == c.Id)  // Check if has subcategories
+			}).ToList();
+
+			return Json(categoryList);
+		}
+		[HttpGet]
+		[Authorize(Roles = "Writer")]
+		public IActionResult ListCategories()
+		{
+			return View();
+		}
 		[HttpDelete]
 		[Authorize(Roles = "Writer")]
 		public async Task<IActionResult> DeleteCategory(int id)
@@ -302,24 +349,14 @@ namespace WebApp.Controllers
 
 			return Json(new { successful = false, message = result.Message });
 		}
-		[HttpDelete]
-		[Authorize(Roles = "Writer")]
-		public async Task<IActionResult> DeleteTag([FromBody] WebApp.ViewModel.TagViewModel tagViewModel)
-		{
-			try
-			{
-				var result = await TagManagement.DeleteTag(tagViewModel.Id);
+		#endregion
 
-				if (result.IsSuccessful)
-				{
-					return Json(new { success = true });
-				}
-				return Json(new { success = false, message = "برای حذف خطا رخ داده است!" });
-			}
-			catch (Exception ex)
-			{
-				return Json(new { success = false, message = "برای حذف خطا رخ داده است!" });
-			}
+
+		[HttpGet]
+		[Authorize(Roles = "Writer")]
+		public IActionResult ListFiles()
+		{
+			return View();
 		}
 		
 	}

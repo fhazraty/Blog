@@ -52,16 +52,16 @@
         $(document).ready(function () {
             kendo.culture("fa-IR");
             kendo.ui.Grid.prototype.options.messages = {
-            commands: {
-                create: "افزودن",
-                cancel: "لغو",
-                save: "ذخیره",
-                edit: "ویرایش",
-                update: "به‌روزرسانی",
-                destroy: "حذف",
-                canceledit: "لغو ویرایش"
-            }
-        };
+                commands: {
+                    create: "افزودن",
+                    cancel: "لغو",
+                    save: "ذخیره",
+                    edit: "ویرایش",
+                    update: "به‌روزرسانی",
+                    destroy: "حذف",
+                    canceledit: "لغو ویرایش"
+                }
+            };
 
             var grid = $("#tagsGrid").kendoGrid({
                 dataSource: {

@@ -37,6 +37,18 @@
     <script src="~/lib/kendo/js/kendo.all.min.js"></script>
     <script>
         $(document).ready(function () {
+
+            kendo.ui.TreeList.prototype.options.messages = {
+                commands: {
+                    create: "افزودن",
+                    cancel: "لغو",
+                    save: "ذخیره",
+                    edit: "ویرایش",
+                    update: "به‌روزرسانی",
+                    destroy: "حذف",
+                    canceledit: "لغو ویرایش"
+                }
+            };
             // Initialize TreeList
             var treeList = $("#categoriesTreeList").kendoTreeList({
                 dataSource: {

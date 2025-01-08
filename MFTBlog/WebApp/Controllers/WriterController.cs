@@ -349,6 +349,9 @@ namespace WebApp.Controllers
 
 			return Json(new { successful = false, message = result.Message });
 		}
+		
+		
+		
 		#endregion
 
 
@@ -357,6 +360,39 @@ namespace WebApp.Controllers
 		public IActionResult ListFiles()
 		{
 			return View();
+		}
+		[HttpPut]
+		[Authorize(Roles = "Writer")]
+		public async Task<IActionResult> UpdateCategory([FromBody] WebApp.ViewModel.UpdateCategoryViewModel categoryViewModel)
+		{
+			if (!ModelState.IsValid)
+			{
+				string errorMsg = "";
+
+				foreach (var state in ModelState)
+				{
+					foreach (var error in state.Value.Errors)
+					{
+						errorMsg += error.ErrorMessage;
+					}
+				}
+
+				return Json(new { successful = false, message = errorMsg });
+			}
+
+			var result = await CategoryManagement.UpdateCategoryAsync(new BLL.Model.CategoryViewModel()
+			{
+				Id = categoryViewModel.Id,
+				Name = categoryViewModel.Name,
+				ParentCategoryId = categoryViewModel.ParentCategoryId
+			});
+
+			if (result.IsSuccessful)
+			{
+				return Json(new { successful = true });
+			}
+
+			return Json(new { successful = false, message = "خطا رخ داده است!" });
 		}
 		
 	}

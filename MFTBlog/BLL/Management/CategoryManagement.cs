@@ -117,5 +117,66 @@ namespace BLL.Management
 				};
 			}
 		}
+		public async Task<ResultEntityViewModel<int>> UpdateCategoryAsync(CategoryViewModel categoryViewModel)
+		{
+			try
+			{
+				var category = await CategoryRepository.GetByIdAsync(categoryViewModel.Id);
+				if (category == null)
+				{
+					return new ResultEntityViewModel<int>
+					{
+						IsSuccessful = false,
+						Entity = categoryViewModel.Id,
+						Exception = new KeyNotFoundException("دسته بندی یافت نشد!"),
+						Message = "دسته بندی یافت نشد!"
+					};
+				}
+
+				if (categoryViewModel.ParentCategoryId.HasValue)
+				{
+					if (categoryViewModel.ParentCategoryId != 0)
+					{
+						var parentCategory = await CategoryRepository.GetByIdAsync(categoryViewModel.ParentCategoryId.Value);
+						if (parentCategory == null)
+						{
+							return new ResultEntityViewModel<int>
+							{
+								IsSuccessful = false,
+								Entity = categoryViewModel.ParentCategoryId.Value,
+								Exception = new KeyNotFoundException("دسته بندی والد یافت نشد!"),
+								Message = "دسته بندی والد یافت نشد!"
+							};
+						}
+					}
+					else
+					{
+						categoryViewModel.ParentCategoryId = null;
+					}
+				}
+
+				category.Name = categoryViewModel.Name;
+				category.ParentCategoryId = categoryViewModel.ParentCategoryId;
+
+				await CategoryRepository.UpdateAsync(category);
+
+				return new ResultEntityViewModel<int>
+				{
+					Entity = category.Id,
+					IsSuccessful = true,
+					Message = "دسته بندی با موفقیت به روز شد!"
+				};
+			}
+			catch (Exception ex)
+			{
+				return new ResultEntityViewModel<int>
+				{
+					Exception = ex,
+					IsSuccessful = false,
+					Message = ex.Message
+				};
+			}
+		}
+
 	}
 }

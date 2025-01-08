@@ -13,6 +13,7 @@ namespace WebApp.Controllers
 		public IPostManagement PostManagement { get; set; }
 		public ITagManagement TagManagement { get; set; }
 		public ICategoryManagement CategoryManagement { get; set; }
+		public IUploadedFileManagement UploadedFileManagement { get; set; }
 		public WriterController()
 		{
 			var context = new BlogContext();
@@ -25,6 +26,11 @@ namespace WebApp.Controllers
 					new TagRepository(context));
 			TagManagement = new TagManagement(new TagRepository(context));
 			CategoryManagement = new CategoryManagement(new CategoryRepository(context));
+			UploadedFileManagement = new UploadedFileManagement
+				(
+				new UploadedFileRepository(context),
+				new UploadedFileRepository(new BlogContext())
+				);
 		}
 		[HttpGet]
 		[Authorize(Roles = "Writer")]
@@ -349,18 +355,7 @@ namespace WebApp.Controllers
 
 			return Json(new { successful = false, message = result.Message });
 		}
-		
-		
-		
-		#endregion
 
-
-		[HttpGet]
-		[Authorize(Roles = "Writer")]
-		public IActionResult ListFiles()
-		{
-			return View();
-		}
 		[HttpPut]
 		[Authorize(Roles = "Writer")]
 		public async Task<IActionResult> UpdateCategory([FromBody] WebApp.ViewModel.UpdateCategoryViewModel categoryViewModel)
@@ -394,6 +389,33 @@ namespace WebApp.Controllers
 
 			return Json(new { successful = false, message = "خطا رخ داده است!" });
 		}
-		
+
+		#endregion
+
+
+		#region Files
+		[HttpGet]
+		[Authorize(Roles = "Writer")]
+		public IActionResult ListFiles()
+		{
+			return View();
+		}
+		[HttpPost]
+		[Authorize(Roles = "Writer")]
+		public async Task<IActionResult> ListFilesData(int page, int perpage)
+		{
+			var files = await UploadedFileManagement.ListFiles(page, perpage);
+
+			var tasks = files.Item1.Select(async file =>
+			{
+				file.PersianUploadDate = await ConvertToPersianDateTime(file.UploadedAt);
+				return file;
+			}).ToList();
+
+			await Task.WhenAll(tasks);
+
+			return Json(new { successful = true, files = files.Item1, filescount = files.Item2 });
+		}
+		#endregion
 	}
 }

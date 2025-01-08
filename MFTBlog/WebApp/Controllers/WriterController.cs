@@ -3,7 +3,9 @@ using BLL.Model;
 using DAL.EF;
 using DAL.EF.Repository;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using WebApp.ViewModel;
 
 namespace WebApp.Controllers
@@ -416,6 +418,44 @@ namespace WebApp.Controllers
 
 			return Json(new { successful = true, files = files.Item1, filescount = files.Item2 });
 		}
+
+		[HttpGet]
+		[Authorize(Roles = "Writer")]
+		public IActionResult AddNewFile()
+		{
+			return View("AddNewFile");
+		}
+		
+		[HttpPost]
+		[Authorize(Roles = "Writer")]
+		public async Task<IActionResult> AddNewFile([FromForm] IFormFile files)
+		{
+			if (files != null && files.Length > 0)
+			{
+				using (var memoryStream = new MemoryStream())
+				{
+					await files.CopyToAsync(memoryStream);
+					var uploadedFileViewModel = new UploadedFileViewModel
+					{
+						Title = files.FileName,
+						Data = memoryStream.ToArray(),
+						UploadedAt = DateTime.Now
+					};
+
+					var result = await UploadedFileManagement.AddFileAsync(uploadedFileViewModel);
+
+					if (result.IsSuccessful)
+					{
+						return Json(new { success = true });
+					}
+				}
+
+				return Json(new { success = true });
+			}
+
+			return Json(new { success = false });
+		}
+
 		#endregion
 	}
 }

@@ -26,6 +26,8 @@ namespace BLL.Management
 				var uploadedFile = new UploadedFile
 				{
 					Title = uploadedFileViewModel.Title,
+					FileName = uploadedFileViewModel.FileName,
+					ContentType = uploadedFileViewModel.ContentType,
 					Data = uploadedFileViewModel.Data,
 					UploadedAt = DateTime.Now
 				};
@@ -67,11 +69,63 @@ namespace BLL.Management
 			{
 				Id = f.Id,
 				Title = f.Title,
-				Data = f.Data,
+				FileName = f.FileName,
+				ContentType	= f.ContentType,
 				UploadedAt = f.UploadedAt,
-				PersianUploadDate = f.UploadedAt.ToString("yyyy/MM/dd HH:mm:ss", new System.Globalization.CultureInfo("fa-IR")),
 				RowIndex = ((page - 1) * perPage) + index + 1
 			}).ToList(), fileCount);
+		}
+		public async Task<FileListViewModel?> GetFileByIdAsync(int id)
+		{
+			var file = await UploadedFileRepository1.GetByIdAsync(id);
+			
+			if (file == null) return null;
+
+			return new FileListViewModel
+			{
+				Id = file.Id,
+				Title = file.Title,
+				FileName = file.FileName,
+				ContentType = file.ContentType,
+				Data = file.Data,
+				UploadedAt = file.UploadedAt
+			};
+		}
+		public async Task<ResultViewModel> DeleteFileAsync(int id)
+		{
+			try
+			{
+				var file = await UploadedFileRepository1.GetByIdAsync(id);
+				if (file == null)
+				{
+					return new ResultEntityViewModel<int>()
+					{
+						Entity = id,
+						Exception = new KeyNotFoundException(),
+						IsSuccessful = false,
+						Message = "فایل یافت نشد."
+					};
+				}
+
+				await UploadedFileRepository1.DeleteAsync(id);
+
+				return new ResultEntityViewModel<int>()
+				{
+					Entity = id,
+					IsSuccessful = true,
+					Message = "فایل با موفقیت حذف شد."
+				};
+			}
+			catch (Exception ex)
+			{
+				return new ResultEntityViewModel<int>()
+				{
+					Entity = id,
+					Exception = ex,
+					IsSuccessful = false,
+					Message = "خطا رخ داده است!"
+				};
+			}
 		}
 	}
 }

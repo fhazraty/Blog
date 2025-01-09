@@ -20,6 +20,7 @@
                             <thead>
                                 <tr>
                                     <th>ردیف</th>
+                                    <th>اسم فایل</th>
                                     <th>عنوان فایل</th>
                                     <th>تاریخ آپلود</th>
                                     <th>عملیات</th>
@@ -65,11 +66,13 @@
                         var row = `
                             <tr>
                                 <td>${file.rowIndex}</td>
+                                <td>${file.fileName}</td>
                                 <td>${file.title}</td>
                                 <td>${file.persianUploadDate}</td>
                                 <td>
                                     <button class="btn btn-primary btn-sm" onclick="downloadFile(${file.id})"><i class="fas fa-download"></i> دانلود</button>
                                     <button class="btn btn-danger btn-sm" onclick="deleteFile(${file.id})"><i class="fas fa-trash-alt"></i> حذف</button>
+                                    <button class="btn btn-info btn-sm" onclick="copyLink(${file.id})"><i class="fas fa-copy"></i> کپی لینک</button>
                                 </td>
                             </tr>`;
                         filesTableBody.append(row);
@@ -85,6 +88,15 @@
 
         function downloadFile(fileId) {
             window.location.href = `/Writer/DownloadFile?id=${fileId}`;
+        }
+
+        function copyLink(fileId) {
+            var link = `${window.location.origin}/Writer/ViewFile?id=${fileId}`;
+            navigator.clipboard.writeText(link).then(function() {
+                alert('لینک با موفقیت کپی شد.');
+            }, function() {
+                alert('خطا در کپی کردن لینک.');
+            });
         }
 
         function deleteFile(fileId) {

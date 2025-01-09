@@ -418,14 +418,12 @@ namespace WebApp.Controllers
 
 			return Json(new { successful = true, files = files.Item1, filescount = files.Item2 });
 		}
-
 		[HttpGet]
 		[Authorize(Roles = "Writer")]
 		public IActionResult AddNewFile()
 		{
 			return View("AddNewFile");
 		}
-		
 		[HttpPost]
 		[Authorize(Roles = "Writer")]
 		public async Task<IActionResult> AddNewFile([FromForm] IFormFile files)
@@ -435,9 +433,12 @@ namespace WebApp.Controllers
 				using (var memoryStream = new MemoryStream())
 				{
 					await files.CopyToAsync(memoryStream);
+
 					var uploadedFileViewModel = new UploadedFileViewModel
 					{
-						Title = files.FileName,
+						Title = "",
+						FileName = files.FileName,
+						ContentType = files.ContentType,
 						Data = memoryStream.ToArray(),
 						UploadedAt = DateTime.Now
 					};
@@ -454,6 +455,64 @@ namespace WebApp.Controllers
 			}
 
 			return Json(new { success = false });
+		}
+		[HttpGet]
+		[Authorize(Roles = "Writer")]
+		public async Task<IActionResult> ViewFile(int id)
+		{
+			var file = await UploadedFileManagement.GetFileByIdAsync(id);
+
+			if (file == null)
+			{
+				return NotFound();
+			}
+
+			return File(file.Data, file.ContentType, file.Title);
+		}
+		[HttpGet]
+		[Authorize(Roles = "Writer")]
+		public async Task<IActionResult> DownloadFile(int id)
+		{
+			var file = await UploadedFileManagement.GetFileByIdAsync(id);
+
+			if (file == null)
+			{
+				return NotFound();
+			}
+
+			var contentDisposition = new System.Net.Mime.ContentDisposition
+			{
+				FileName = file.FileName,
+				Inline = false
+			};
+
+			Response.Headers.Add("Content-Disposition", contentDisposition.ToString());
+
+			return File(file.Data, file.ContentType, file.FileName);
+		}
+		[HttpDelete]
+		[Authorize(Roles = "Writer")]
+		public async Task<IActionResult> DeleteFile(int id)
+		{
+			try
+			{
+				var result = await UploadedFileManagement.DeleteFileAsync(id);
+
+				if(result.Exception is KeyNotFoundException)
+				{
+					return Json(new { successful = false, message = "فایل یافت نشد!" });
+				}
+
+				if (result.IsSuccessful)
+				{
+					return Json(new { successful = true });
+				}
+				return Json(new { successful = false, message = result.Message });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { successful = false, message = "خطا رخ داده است!" });
+			}
 		}
 
 		#endregion

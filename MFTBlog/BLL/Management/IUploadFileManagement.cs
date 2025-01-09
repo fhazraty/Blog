@@ -6,5 +6,7 @@ namespace BLL.Management
 	{
 		Task<ResultViewModel> AddFileAsync(UploadedFileViewModel uploadedFileViewModel);
 		Task<(List<FileListViewModel>, int)> ListFiles(int page, int perPage);
+		Task<FileListViewModel?> GetFileByIdAsync(int id);
+		Task<ResultViewModel> DeleteFileAsync(int id);
 	}
 }

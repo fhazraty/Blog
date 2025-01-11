@@ -54,7 +54,6 @@ namespace WebApp.Controllers
 			}
 			return RedirectToAction("ErrorInUsernameOrPassword", "Account");
 		}
-
 		[HttpGet]
 		public IActionResult ErrorInUsernameOrPassword()
 		{
@@ -96,6 +95,12 @@ namespace WebApp.Controllers
 			}
 
 			return View(model);
+		}
+		[HttpGet]
+		public async Task<IActionResult> Logout()
+		{
+			await HttpContext.SignOutAsync("mft");
+			return RedirectToAction("Index", "Account");
 		}
 	}
 }

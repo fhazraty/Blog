@@ -457,7 +457,7 @@ namespace WebApp.Controllers
 			return Json(new { success = false });
 		}
 		[HttpGet]
-		[Authorize(Roles = "Writer")]
+		[AllowAnonymous]
 		public async Task<IActionResult> ViewFile(int id)
 		{
 			var file = await UploadedFileManagement.GetFileByIdAsync(id);

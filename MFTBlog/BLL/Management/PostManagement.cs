@@ -31,6 +31,7 @@ namespace BLL.Management
 				{
 					Author = await UserRepository.GetByIdAsync(postViewModel.AuthorId),
 					CreatedAt = DateTime.Now,
+					AbstractContent = postViewModel.AbstractContent,
 					HtmlContent = postViewModel.HtmlContent,
 					Title = postViewModel.Title,
 					Tags = await TagRepository.GetAllByIdList(postViewModel.TagIdList)
@@ -72,6 +73,7 @@ namespace BLL.Management
 			{
 				Id = p.Id,
 				Title = p.Title,
+				AbstractContent = p.AbstractContent,
 				AuthorName = p.Author?.FirstName + " " + p.Author?.LastName,
 				CategoryName = p.Category?.Name,
 				InsertationDateTime = p.CreatedAt,
@@ -129,6 +131,7 @@ namespace BLL.Management
 				{
 					AuthorId = post.AuthorId,
 					Title = post.Title,
+					AbstractContent = post.AbstractContent,	
 					HtmlContent = post.HtmlContent,
 					TagIdList = post.Tags.Select(t => t.Id).ToList(),
 					CategoryId = post.CategoryId
@@ -164,6 +167,7 @@ namespace BLL.Management
 				}
 
 				post.Title = postViewModel.Title;
+				post.AbstractContent = postViewModel.AbstractContent;
 				post.HtmlContent = postViewModel.HtmlContent;
 				post.Author = await UserRepository.GetByIdAsync(postViewModel.AuthorId);
 				post.Tags = await TagRepository.GetAllByIdList(postViewModel.TagIdList);

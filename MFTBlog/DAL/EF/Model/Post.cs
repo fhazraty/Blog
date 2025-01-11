@@ -9,7 +9,8 @@ namespace DAL.EF.Model
 
 		[Required, MaxLength(200)]
 		public string Title { get; set; }
-
+		[Required]
+		public string AbstractContent { get; set; }
 		[Required]
 		public string HtmlContent { get; set; }
 

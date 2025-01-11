@@ -6,6 +6,8 @@ namespace WebApp.ViewModel
 	{
 		[Required(ErrorMessage = "عنوان پست اجباری است. ")]
 		public string Title { get; set; }
+		[Required(ErrorMessage = "محتوای خلاصه پست اجباری است. ")]
+		public string AbstractContent { get; set; }
 		[Required(ErrorMessage = "محتوای HTML پست اجباری است. ")]
 		public string HtmlContent { get; set; }
 		public int? CategoryId { get; set; }

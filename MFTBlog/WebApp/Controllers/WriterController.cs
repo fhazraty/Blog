@@ -52,8 +52,6 @@ namespace WebApp.Controllers
 		[Authorize(Roles = "Writer")]
 		public async Task<IActionResult> ListPostsData(int page, int perpage)
 		{
-			int counter = 0;
-
 			var posts = await PostManagement.ListPost(page, perpage);
 
 			var tasks = posts.Item1.Select(async post =>
@@ -95,6 +93,7 @@ namespace WebApp.Controllers
 			var postViewModel = new PostViewModel
 			{
 				Title = addNewPostViewModel.Title,
+				AbstractContent = addNewPostViewModel.AbstractContent,
 				HtmlContent = addNewPostViewModel.HtmlContent,
 				CategoryId = addNewPostViewModel.CategoryId,
 				TagIdList = addNewPostViewModel.TagIdList,

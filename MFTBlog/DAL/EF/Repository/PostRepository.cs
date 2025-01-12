@@ -31,6 +31,8 @@ namespace DAL.EF.Repository
 		{
 			return await _dbSet
 				.Include(p => p.Tags)
+				.Include(p => p.Category)
+				.Include(p => p.Author)
 				.FirstOrDefaultAsync(p => p.Id == id);
 		}
 	}

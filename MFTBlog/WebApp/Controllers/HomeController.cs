@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.ViewModel;
 using Microsoft.EntityFrameworkCore;
+using BLL.Model;
 
 namespace WebApp.Controllers
 {
@@ -78,6 +79,7 @@ namespace WebApp.Controllers
 				TotalPages = totalPages,
 				Posts = posts.Item1.Select(post => new PostItemViewModel
 				{
+					Id = post.Id,
 					RowIndex = post.RowIndex,
 					Title = post.Title,
 					AbstractContent = post.AbstractContent,
@@ -106,5 +108,32 @@ namespace WebApp.Controllers
 
 			return Json(new { successful = true, posts = posts.Item1, postscount = posts.Item2 });
 		}
+		[AllowAnonymous]
+		public async Task<IActionResult> PostDetails(int id)
+		{
+			var postResult = await PostManagement.GetPostById(id);
+			if (!postResult.IsSuccessful)
+			{
+				return NotFound();
+			}
+
+			var post = ((ResultEntityViewModel<PostViewModel>)postResult).Entity;
+			post.PersianInsertationDateTime = await ConvertToPersianDateTime(post.CreatedAt.Value);
+
+			var model = new PostDetailsViewModel
+			{
+				Id = post.Id,
+				Title = post.Title,
+				HtmlContent = post.HtmlContent,
+				AuthorName = post.AuthorName,
+				CategoryName = post.CategoryName,
+				PersianInsertationDateTime = post.PersianInsertationDateTime,
+				Tags = post.TagTextList
+			};
+
+			return View(model);
+		}
+
+
 	}
 }

@@ -93,13 +93,63 @@
             });
 
             $("#editor").kendoEditor({
-                stylesheets: ["../content/shared/styles/editor.css"],
-                tools: [
-                    "bold", "italic", "underline", "justifyLeft", "justifyCenter", "justifyRight",
-                    "insertUnorderedList", "insertOrderedList", "indent", "outdent", "createLink",
-                    "unlink", "insertImage", "viewHtml", "formatting"
-                ]
-            });
+                        stylesheets: ["../content/shared/styles/editor.css"],
+                        tools: [
+                            "bold",
+                            "italic",
+                            "underline",
+                            "strikethrough",
+                            "justifyLeft",
+                            "justifyCenter",
+                            "justifyRight",
+                            "justifyFull",
+                            "insertUnorderedList",
+                            "insertOrderedList",
+                            "indent",
+                            "outdent",
+                            "createLink",
+                            "unlink",
+                            "insertImage",
+                            "insertFile",
+                            "subscript",
+                            "superscript",
+                            "tableWizard",
+                            "createTable",
+                            "addRowAbove",
+                            "addRowBelow",
+                            "addColumnLeft",
+                            "addColumnRight",
+                            "deleteRow",
+                            "deleteColumn",
+                            "viewHtml",
+                            "formatting",
+                            "cleanFormatting",
+                            "fontName",
+                            "fontSize",
+                            "foreColor",
+                            "backColor"
+                        ],
+                        fontName: [
+                            { text: "Vazir", value: "Vazir" },
+                            { text: "Andale Mono", value: "Andale Mono" },
+                            { text: "Arial", value: "Arial" },
+                            { text: "Arial Black", value: "Arial Black" },
+                            { text: "Book Antiqua", value: "Book Antiqua" },
+                            { text: "Comic Sans MS", value: "Comic Sans MS" },
+                            { text: "Courier New", value: "Courier New" },
+                            { text: "Georgia", value: "Georgia" },
+                            { text: "Helvetica", value: "Helvetica" },
+                            { text: "Impact", value: "Impact" },
+                            { text: "Symbol", value: "Symbol" },
+                            { text: "Tahoma", value: "Tahoma" },
+                            { text: "Terminal", value: "Terminal" },
+                            { text: "Times New Roman", value: "Times New Roman" },
+                            { text: "Trebuchet MS", value: "Trebuchet MS" },
+                            { text: "Verdana", value: "Verdana" },
+                            { text: "Webdings", value: "Webdings" },
+                            { text: "Wingdings", value: "Wingdings" }
+                        ]
+                    });
 
             // دریافت اطلاعات پست برای پر کردن فرم
             var postId = '@ViewBag.PostId'; // شناسه پست
@@ -111,6 +161,7 @@
                     if (response.successful) {
                         var post = response.post;
                         $('#PostTitle').val(post.title);
+                        $('#AbstractContent').val(post.abstractContent);
                         $("#editor").data("kendoEditor").value(post.htmlContent);
 
                         // انتخاب دسته‌بندی

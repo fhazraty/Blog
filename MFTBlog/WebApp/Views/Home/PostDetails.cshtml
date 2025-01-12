@@ -1,0 +1,32 @@
+﻿@using Microsoft.AspNetCore.Html
+
+@model PostDetailsViewModel
+
+<div class="container mt-3 mb-5">
+    <h3 class="card-title mb-1 p-2">@Model.Title</h3>
+    <div class="card">
+        <div class="card-header">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="card-text"><strong>نویسنده:</strong> @Model.AuthorName</p>
+                </div>
+                <div class="col-md-6">
+                    <p class="card-text"><strong>منتشر شده در:</strong> @Model.PersianInsertationDateTime</p>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="card-text">@Html.Raw(Model.HtmlContent)</div>
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="card-text float-left"><strong>دسته بندی:</strong> @Model.CategoryName</p>
+                </div>
+                <div class="col-md-6">
+                    <p class="card-text float-left"><strong>تگ ها:</strong> @string.Join(", ", Model.Tags)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

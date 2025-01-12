@@ -17,7 +17,9 @@
                     {
                         <div class="card mb-3">
                             <div class="card-header">
-                                <h5 class="card-title m-0">@post.Title</h5>
+                                <h5 class="card-title m-0">
+                                    @post.Title
+                                </h5>
                             </div>
                             <div class="card-body">
                                 <p class="card-text">خلاصه:@Html.Raw(post.AbstractContent)</p>
@@ -25,6 +27,11 @@
                                     نویسنده: @post.AuthorName |
                                     دسته: @post.CategoryName |
                                     تاریخ: @post.PersianInsertationDateTime
+                                </p>
+                                <p>
+                                    <p class="text-end">
+                                        <a class="btn btn-primary" href="@Url.Action("PostDetails", "Home", new { id = post.Id })">ادامه مطلب</a>
+                                    </p>
                                 </p>
                             </div>
                         </div>
@@ -83,7 +90,6 @@
                                     if (endPage < Model.TotalPages - 1)
                                     {
                                         <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
-                                        ;
                                     }
                                     <li class="page-item">
                                         <a class="page-link"

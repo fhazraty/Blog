@@ -29,7 +29,7 @@ namespace BLL.Management
 			{
 				var post = new Post()
 				{
-					Author = await UserRepository.GetByIdAsync(postViewModel.AuthorId),
+					Author = await UserRepository.GetByIdAsync(postViewModel.AuthorId.Value),
 					CreatedAt = DateTime.Now,
 					AbstractContent = postViewModel.AbstractContent,
 					HtmlContent = postViewModel.HtmlContent,
@@ -129,12 +129,15 @@ namespace BLL.Management
 
 				var postViewModel = new PostViewModel
 				{
-					AuthorId = post.AuthorId,
+					AuthorName = post.Author.FirstName + " " + post.Author.LastName,
 					Title = post.Title,
 					AbstractContent = post.AbstractContent,	
+					CreatedAt = post.CreatedAt,
 					HtmlContent = post.HtmlContent,
 					TagIdList = post.Tags.Select(t => t.Id).ToList(),
-					CategoryId = post.CategoryId
+					TagTextList = post.Tags.Select(t => t.Name).ToList(),
+					CategoryId = post.CategoryId,
+					CategoryName = post.Category.Name
 				};
 
 				return new ResultEntityViewModel<PostViewModel>
@@ -169,7 +172,6 @@ namespace BLL.Management
 				post.Title = postViewModel.Title;
 				post.AbstractContent = postViewModel.AbstractContent;
 				post.HtmlContent = postViewModel.HtmlContent;
-				post.Author = await UserRepository.GetByIdAsync(postViewModel.AuthorId);
 				post.Tags = await TagRepository.GetAllByIdList(postViewModel.TagIdList);
 
 				if (postViewModel.CategoryId.HasValue)

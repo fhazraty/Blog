@@ -23,6 +23,7 @@ namespace DAL.EF
 		public DbSet<Category> Categories { get; set; }
 		public DbSet<UploadedFile> UploadedFiles { get; set; }
 		public DbSet<Menu> Menus { get; set; }
+		public DbSet<SpecialConfiguration> SpecialConfigurations { get; set; }
 		public BlogContext(){ }
 		public BlogContext(DbContextOptions<BlogContext> options) : base(options) { }
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -72,6 +73,9 @@ namespace DAL.EF
 				.HasOne(m => m.ParentMenu)
 				.WithMany(m => m.SubMenus)
 				.HasForeignKey(m => m.ParentMenuId);
+
+			modelBuilder.Entity<SpecialConfiguration>()
+				.HasKey(sc => sc.Id);
 
 			base.OnModelCreating(modelBuilder);
 		}

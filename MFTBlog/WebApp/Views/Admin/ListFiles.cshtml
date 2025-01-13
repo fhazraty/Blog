@@ -1,0 +1,157 @@
+﻿@{
+    ViewData["Title"] = "لیست فایل‌ها";
+    Layout = "/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="mt-4 content" id="fileDashboard">
+    <h2>لیست فایل‌ها</h2>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div><i class="fas fa-table me-1"></i> لیست فایل‌ها</div>
+                        <div>
+                            <a class="btn btn-success btn-sm" href="../../Admin/AddNewFile"><i class="fas fa-plus"></i> افزودن فایل جدید</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>ردیف</th>
+                                    <th>اسم فایل</th>
+                                    <th>عنوان فایل</th>
+                                    <th>تاریخ آپلود</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="filesTableBody">
+                                <!-- اطلاعات از طریق jQuery به اینجا اضافه می‌شود -->
+                            </tbody>
+                        </table>
+
+                        <!-- Pagination -->
+                        <nav aria-label="Page navigation example" style="direction:ltr;">
+                            <ul class="pagination justify-content-center" id="pagination">
+                                <!-- موارد صفحه‌بندی اینجا اضافه می‌شوند -->
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section BottomJS
+{
+    <script>
+        var currentPage = 1;
+        var maxPagesToShow = 10;
+
+        function getFiles(page, perpage) {
+            currentPage = page;
+
+            $.ajax({
+                url: '/Admin/ListFilesData?page=' + page + "&perpage=" + perpage,
+                type: 'POST',
+                success: function(data) {
+                    window.totalPages = Math.ceil(data.filescount / maxPagesToShow);
+
+                    var filesTableBody = $('#filesTableBody');
+                    filesTableBody.empty();
+
+                    $.each(data.files, function(index, file) {
+                        var row = `
+                            <tr>
+                                <td>${file.rowIndex}</td>
+                                <td>${file.fileName}</td>
+                                <td>${file.title}</td>
+                                <td>${file.persianUploadDate}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="downloadFile(${file.id})"><i class="fas fa-download"></i> دانلود</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteFile(${file.id})"><i class="fas fa-trash-alt"></i> حذف</button>
+                                    <button class="btn btn-info btn-sm" onclick="copyLink(${file.id})"><i class="fas fa-copy"></i> کپی لینک</button>
+                                </td>
+                            </tr>`;
+                        filesTableBody.append(row);
+                    });
+
+                    renderPagination();
+                },
+                error: function() {
+                    alert('خطا در بارگذاری داده‌های فایل.');
+                }
+            });
+        }
+
+        function downloadFile(fileId) {
+            window.location.href = `/Admin/DownloadFile?id=${fileId}`;
+        }
+
+        function copyLink(fileId) {
+            var link = `${window.location.origin}/Admin/ViewFile?id=${fileId}`;
+            navigator.clipboard.writeText(link).then(function() {
+                alert('لینک با موفقیت کپی شد.');
+            }, function() {
+                alert('خطا در کپی کردن لینک.');
+            });
+        }
+
+        function deleteFile(fileId) {
+            if (!confirm('آیا از حذف این فایل مطمئن هستید؟')) return;
+
+            $.ajax({
+                url: '/Admin/DeleteFile',
+                type: 'DELETE',
+                data: { id: fileId },
+                success: function(response) {
+                    if (response.successful) {
+                        alert('فایل با موفقیت حذف شد.');
+                        getFiles(currentPage, 10);
+                    } else {
+                        alert('خطا در حذف فایل.');
+                    }
+                },
+                error: function() {
+                    alert('خطا در حذف فایل.');
+                }
+            });
+        }
+
+        function renderPagination() {
+            var pagination = $('#pagination');
+            pagination.empty();
+
+            var startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+            var endPage = Math.min(window.totalPages, startPage + maxPagesToShow - 1);
+
+            if (startPage > 1) {
+                pagination.append(`<li class="page-item"><a class="page-link" href="#" onclick="getFiles(1, 10); return false;">1</a></li>`);
+                if (startPage > 2) {
+                    pagination.append('<li class="page-item disabled"><a class="page-link" href="#">...</a></li>');
+                }
+            }
+
+            for (var i = startPage; i <= endPage; i++) {
+                var active = currentPage === i ? 'active' : '';
+                pagination.append(`<li class="page-item ${active}"><a class="page-link" href="#" onclick="getFiles(${i}, 10); return false;">${i}</a></li>`);
+            }
+
+            if (endPage < window.totalPages) {
+                if (endPage < window.totalPages - 1) {
+                    pagination.append('<li class="page-item disabled"><a class="page-link" href="#">...</a></li>');
+                }
+                pagination.append(`<li class="page-item"><a class="page-link" href="#" onclick="getFiles(${window.totalPages}, 10); return false;">${window.totalPages}</a></li>`);
+            }
+
+            pagination.prepend(`<li class="page-item ${currentPage === 1 ? 'disabled' : ''}"><a class="page-link" href="#" onclick="getFiles(currentPage - 1, 10); return false;">قبلی</a></li>`);
+            pagination.append(`<li class="page-item ${currentPage === window.totalPages ? 'disabled' : ''}"><a class="page-link" href="#" onclick="getFiles(currentPage + 1, 10); return false;">بعدی</a></li>`);
+        }
+
+        $(document).ready(function() {
+            getFiles(1, 10);
+        });
+    </script>
+}

@@ -1,0 +1,149 @@
+﻿@{
+    ViewData["Title"] = "لیست پست‌ها";
+    Layout = "/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="mt-4 content" id="dashboard">
+    <h2>لیست پست‌ها</h2>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div><i class="fas fa-table me-1"></i> لیست پست‌ها</div>
+                        <div>
+                            <a class="btn btn-success btn-sm" href="../../Admin/AddNewPost"><i class="fas fa-plus"></i> افزودن پست جدید</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>ردیف</th>
+                                    <th>عنوان پست</th>
+                                    <th>نویسنده</th>
+                                    <th>دسته‌بندی</th>
+                                    <th>تاریخ درج</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="postsTableBody">
+                                <!-- اطلاعات از طریق jQuery به اینجا اضافه می‌شود -->
+                            </tbody>
+                        </table>
+
+                        <!-- Pagination -->
+                        <nav aria-label="Page navigation example" style="direction:ltr;">
+                            <ul class="pagination justify-content-center" id="pagination">
+                                <!-- موارد صفحه‌بندی اینجا اضافه می‌شوند -->
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section BottomJS
+{
+    <script>
+        var currentPage = 1;
+        var maxPagesToShow = 10;
+
+        function getPosts(page, perpage) {
+            currentPage = page;
+
+            $.ajax({
+                url: '/Admin/ListPostsData?page=' + page + "&perpage=" + perpage,
+                type: 'POST',
+                success: function(data) {
+                    window.totalPages = Math.ceil(data.postscount / maxPagesToShow);
+
+                    var postsTableBody = $('#postsTableBody');
+                    postsTableBody.empty();
+
+                    $.each(data.posts, function(index, post) {
+                        var row = `
+                            <tr>
+                                <td>${post.rowIndex}</td>
+                                <td>${post.title}</td>
+                                <td>${post.authorName}</td>
+                                <td>${post.categoryName}</td>
+                                <td>${post.persianInsertationDateTime}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="redirectToEditPost(${post.id})"><i class="fas fa-edit"></i> ویرایش</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deletePost(${post.id})"><i class="fas fa-trash-alt"></i> حذف</button>
+                                </td>
+                            </tr>`;
+                        postsTableBody.append(row);
+                    });
+
+                    renderPagination();
+                },
+                error: function() {
+                    alert('خطا در بارگذاری داده‌های پست.');
+                }
+            });
+        }
+
+        function redirectToEditPost(postId) {
+            window.location.href = `/Admin/EditPost?id=${postId}`;
+        }
+
+        function deletePost(postId) {
+            if (!confirm('آیا از حذف این پست مطمئن هستید؟')) return;
+
+            $.ajax({
+                url: '/Admin/DeletePost',
+                type: 'DELETE',
+                data: { id: postId },
+                success: function(response) {
+                    if (response.successful) {
+                        alert('پست با موفقیت حذف شد.');
+                        getPosts(currentPage, 10);
+                    } else {
+                        alert('خطا در حذف پست.');
+                    }
+                },
+                error: function() {
+                    alert('خطا در حذف پست.');
+                }
+            });
+        }
+
+        function renderPagination() {
+            var pagination = $('#pagination');
+            pagination.empty();
+
+            var startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+            var endPage = Math.min(window.totalPages, startPage + maxPagesToShow - 1);
+
+            if (startPage > 1) {
+                pagination.append(`<li class="page-item"><a class="page-link" href="#" onclick="getPosts(1, 10); return false;">1</a></li>`);
+                if (startPage > 2) {
+                    pagination.append('<li class="page-item disabled"><a class="page-link" href="#">...</a></li>');
+                }
+            }
+
+            for (var i = startPage; i <= endPage; i++) {
+                var active = currentPage === i ? 'active' : '';
+                pagination.append(`<li class="page-item ${active}"><a class="page-link" href="#" onclick="getPosts(${i}, 10); return false;">${i}</a></li>`);
+            }
+
+            if (endPage < window.totalPages) {
+                if (endPage < window.totalPages - 1) {
+                    pagination.append('<li class="page-item disabled"><a class="page-link" href="#">...</a></li>');
+                }
+                pagination.append(`<li class="page-item"><a class="page-link" href="#" onclick="getPosts(${window.totalPages}, 10); return false;">${window.totalPages}</a></li>`);
+            }
+
+            pagination.prepend(`<li class="page-item ${currentPage === 1 ? 'disabled' : ''}"><a class="page-link" href="#" onclick="getPosts(currentPage - 1, 10); return false;">قبلی</a></li>`);
+            pagination.append(`<li class="page-item ${currentPage === window.totalPages ? 'disabled' : ''}"><a class="page-link" href="#" onclick="getPosts(currentPage + 1, 10); return false;">بعدی</a></li>`);
+        }
+
+        $(document).ready(function() {
+            getPosts(1, 10);
+        });
+    </script>
+}

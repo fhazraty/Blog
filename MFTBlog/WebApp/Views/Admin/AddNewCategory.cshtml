@@ -1,6 +1,6 @@
 ﻿@{
     ViewData["Title"] = "اضافه کردن دسته بندی جدید";
-	Layout = "~/Views/Shared/_WriterLayout.cshtml";
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 <div class="mt-4 content" id="dashboard">
@@ -38,7 +38,7 @@
                 e.preventDefault();
                 var categoryName = $('#categoryName').val();
                 $.ajax({
-                    url: '/Writer/AddNewCategory',
+                    url: '/Admin/AddNewCategory',
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({ 
@@ -48,7 +48,7 @@
                     success: function(response) {
                         if(response.successful){
                            alert('دسته بندی جدید با موفقیت ذخیره شد');
-                           window.location.assign("../../Writer/ListCategories")
+                           window.location.assign("../../Admin/ListCategories")
                         }
                         else{
                             alert(response.message);

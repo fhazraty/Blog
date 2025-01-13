@@ -9,6 +9,7 @@
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 	<link href="~/css/admincss.css" rel="stylesheet" />
+    @RenderSection("HeaderCSS", false)
 </head>
 <body>
     <!-- نوار کناری -->
@@ -20,13 +21,13 @@
                 </div>
                 <ul class="list-unstyled">
                     <li><a href="#dashboard" class="active"><i class="fas fa-tachometer-alt"></i> داشبورد</a></li>
-                    <li><a href="#users"><i class="fas fa-users"></i> کاربران</a></li>
-                    <li><a href="#roles"><i class="fas fa-user-shield"></i> نقش‌ها</a></li>
-                    <li><a href="#posts"><i class="fas fa-file-alt"></i> پست‌ها</a></li>
-                    <li><a href="#categories"><i class="fas fa-tag"></i> دسته‌بندی‌ها</a></li>
-                    <li><a href="#tags"><i class="fas fa-tags"></i> تگ‌ها</a></li>
-                    <li><a href="#files"><i class="fas fa-upload"></i> فایل‌های آپلود شده</a></li>
-                    <li><a href="#menus"><i class="fas fa-bars"></i> منوها</a></li>
+                    <li><a href="../../Admin/ListPosts" id="postItem"><i class="fas fa-file-alt"></i> پست‌ها</a></li>
+                    <li><a href="../../Admin/ListUsers"><i class="fas fa-users"></i> کاربران</a></li>
+                    <li><a href="../../Admin/ListRoles"><i class="fas fa-user-shield"></i> نقش‌ها</a></li>
+                    <li><a href="../../Admin/ListCategories"><i class="fas fa-tag"></i> دسته‌بندی‌ها</a></li>
+                    <li><a href="../../Admin/ListTags"><i class="fas fa-tags"></i> تگ‌ها</a></li>
+                    <li><a href="../../Admin/ListFiles"><i class="fas fa-upload"></i> فایل‌های آپلود شده</a></li>
+                    <li><a href="../../Admin/ListMenu"><i class="fas fa-bars"></i> منوها</a></li>
                     <li><a href="../../Account/Logout" id="logoutItem"><i class="fas fa-sign-out-alt"></i> خروج</a></li>
                 </ul>
             </nav>
@@ -52,5 +53,6 @@
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @RenderSection("BottomJS", false)
 </body>
 </html>

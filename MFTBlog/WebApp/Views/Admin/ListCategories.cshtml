@@ -1,6 +1,6 @@
 ﻿@{
     ViewData["Title"] = "مدیریت دسته‌بندی‌ها";
-    Layout = "/Views/Shared/_WriterLayout.cshtml";
+    Layout = "/Views/Shared/_AdminLayout.cshtml";
 }
 
 <div class="mt-4 content" id="dashboard">
@@ -59,7 +59,7 @@
                 dataSource: {
                     transport: {
                         read: {
-                            url: "../Writer/GetCategories",
+                            url: "../Admin/GetCategories",
                             dataType: "json"
                         },
                         parameterMap: function (data, operation) {
@@ -100,7 +100,7 @@
                 filterable: true,
                 save: function (e) {
                     $.ajax({
-                        url: '/Writer/UpdateCategory',
+                        url: '/Admin/UpdateCategory',
                         type: 'PUT',
                         contentType: 'application/json',
                         data: JSON.stringify(e.model),
@@ -123,7 +123,7 @@
                 remove: function (e) {
                     // ارسال درخواست حذف به سرور
                     $.ajax({
-                        url: '/Writer/DeleteCategory?id=' + e.model.id,
+                        url: '/Admin/DeleteCategory?id=' + e.model.id,
                         type: 'DELETE',
                         success: function (result) {
                             if (!result.successful) {
@@ -147,7 +147,7 @@
                 var selectedRow = treeList.select();
                 var selectedDataItem = treeList.dataItem(selectedRow);
                 var parentCategoryId = selectedDataItem ? selectedDataItem.id : null;
-                window.location.href = "../../Writer/AddNewCategory?parentId=" + parentCategoryId;
+                window.location.href = "../../Admin/AddNewCategory?parentId=" + parentCategoryId;
             });
         });
     </script>

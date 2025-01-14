@@ -16,7 +16,7 @@
     }
 </style>
 
-<div class="container mt-5">
+<div class="container mt-5 mb-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card">
@@ -84,11 +84,7 @@
                         <!-- فیلد BirthDate -->
                         <div class="mb-3">
                             <label for="inputBirthDate" class="form-label">تاریخ تولد</label>
-                            @Html.TextBoxFor(model => model.BirthDate, "{0:yyyy-MM-dd}", new
-                                {
-                                    @class = "form-control",
-                                    @type = "date"
-                                })
+                            <input id="datepicker" name="BirthDate" class="form-control" autocomplete="off" />
                             @Html.ValidationMessageFor(model => model.BirthDate, "", new { @class = "text-danger" })
                         </div>
 
@@ -99,9 +95,30 @@
                     }
                 </div>
                 <div class="card-footer text-center">
-                    <small>قبلاً ثبت‌نام کرده‌اید؟ <a href="/Account/Login">ورود</a></small>
+                    <small>قبلاً ثبت‌نام کرده‌اید؟ <a href="/Account/">ورود</a></small>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<link href="~/lib/bootstrap-datepicker/f-bootstrap-datepicker.min.css" rel="stylesheet" />
+<script src="~/lib/bootstrap-datepicker/f-bootstrap-datepicker.min.js"></script>
+<script src="~/lib/bootstrap-datepicker/f-bootstrap-datepicker.fa.min.js"></script>
+
+
+<script>
+
+    $(document).ready(function(){
+        $("#datepicker")
+                .datepicker({
+                    dateFormat: "yy/m/d",
+                    changeMonth: true,
+                    changeYear: true,
+                    yearRange: "-100:+100" // last hundred years
+
+                    //maxDate: moment().add(10, 'year').toDate()
+                });
+    });
+</script>
+

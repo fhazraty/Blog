@@ -74,14 +74,14 @@ namespace WebApp.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				var res = Usermanagement.AddUser(new UserViewModel()
+                var res = Usermanagement.AddUser(new UserViewModel()
 				{
 					Username = model.Username,
 					Password = model.Password,
 					FirstName = model.FirstName,
 					LastName = model.LastName,
 					NationalCode = model.NationalCode,
-					BirthDate = model.BirthDate,
+					BirthDate = ConvertToGregorianDateTime(model.BirthDate).Result,
 					Roles = new List<Role>()
 					{
 						new Role()

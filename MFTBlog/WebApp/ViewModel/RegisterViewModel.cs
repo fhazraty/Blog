@@ -25,6 +25,6 @@ namespace WebApp.ViewModel
 		public string Password { get; set; }
 
 		[Required(ErrorMessage = "تاریخ تولد را وارد کنید")]
-		public DateTime BirthDate { get; set; }
+		public string BirthDate { get; set; }
 	}
 }

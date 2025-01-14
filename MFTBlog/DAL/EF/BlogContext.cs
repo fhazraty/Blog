@@ -37,16 +37,16 @@ namespace DAL.EF
 				.HasMany(u => u.Roles)
 				.WithMany(r => r.Users);
 
-			/*
-			In Entity Framework Core, when you want to enforce a uniqueness constraint on a column, 
-			you need to create an index on that column and specify that the index should be unique. 
-			This is because a unique constraint is essentially a unique index.
-			 */
 			modelBuilder.Entity<User>()
 				.HasIndex(u => u.Username)
 				.IsUnique();
 
-			modelBuilder.Entity<User>()
+            modelBuilder.Entity<Role>().HasData(
+                new Role() { Id = 1, Name = "Writer"},
+                new Role() { Id = 2, Name = "Admin" }
+            );
+
+            modelBuilder.Entity<User>()
 				.HasIndex(u => u.NationalCode)
 				.IsUnique();
 

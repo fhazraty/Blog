@@ -14,9 +14,11 @@ namespace WebApp.Controllers
 		public ITagManagement TagManagement { get; set; }
 		public ICategoryManagement CategoryManagement { get; set; }
 		public IUploadedFileManagement UploadedFileManagement { get; set; }
+		public IUserManagement UserManagement { get; set; }
 		public AdminController()
 		{
 			var context = new BlogContext();
+			
 			PostManagement =
 				new PostManagement(
 					new PostRepository(context),
@@ -25,12 +27,16 @@ namespace WebApp.Controllers
 					new CategoryRepository(context),
 					new TagRepository(context));
 			TagManagement = new TagManagement(new TagRepository(context));
+			
 			CategoryManagement = new CategoryManagement(new CategoryRepository(context));
+			
 			UploadedFileManagement = new UploadedFileManagement
 				(
 				new UploadedFileRepository(context),
 				new UploadedFileRepository(new BlogContext())
 				);
+
+			UserManagement = new UserManagement(new UserRepository(context),new UserRepository(new BlogContext()),new RoleRepository(context));
 		}
 		[Authorize(Roles = "Admin")]
 		public IActionResult Index()
@@ -44,6 +50,24 @@ namespace WebApp.Controllers
 		{
 			return View();
 		}
+		[HttpPost]
+		[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> ListUsersData(int page, int perpage)
+		{
+			var users = await UserManagement.ListUsers(page, perpage);
+
+			var tasks = users.Item1.Select(async user =>
+			{
+				user.PersianBirthDate = await ConvertToPersianDateTime(user.BirthDate);
+				return user;
+			}).ToList();
+
+			await Task.WhenAll(tasks);
+
+			return Json(new { successful = true, users = users.Item1, userscount = users.Item2 });
+		}
+
+
 		[HttpGet]
 		[Authorize(Roles = "Admin")]
 		public IActionResult ListRoles()

@@ -1,23 +1,22 @@
 ﻿using BLL.Model;
 using BLL.Utility;
-using DAL.EF;
 using DAL.EF.Model;
 using DAL.EF.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Management
 {
-	public class Usermanagement : IUserManagement
+	public class UserManagement : IUserManagement
 	{
 		private DbContext _context;
-		public IUserRepository UserRepository { get; set; }
+		public IUserRepository UserRepository1 { get; set; }
+		public IUserRepository UserRepository2 { get; set; }
 		public IRoleRepository RoleRepository { get; set; }
-		public Usermanagement()
+		public UserManagement(IUserRepository userRepository1, IUserRepository userRepository2, IRoleRepository roleRepository)
 		{
-			_context = new BlogContext();
-
-			this.UserRepository = new UserRepository(_context);
-			this.RoleRepository = new RoleRepository(_context);
+			UserRepository1 = userRepository1;
+			UserRepository2 = userRepository2;
+			RoleRepository = roleRepository;
 		}
 		public async Task<ResultViewModel> AddUser(UserViewModel userViewModel)
 		{
@@ -44,7 +43,7 @@ namespace BLL.Management
 					usr.Roles.Add(roleEntity);
 				}
 
-				await this.UserRepository.AddAsync(usr);
+				await this.UserRepository1.AddAsync(usr);
 
 				return new ResultEntityViewModel<User>
 				{
@@ -61,12 +60,11 @@ namespace BLL.Management
 				};
 			}
 		}
-
 		public async Task<ResultViewModel> FindUser(UserViewModel userViewModel)
 		{
 			try
 			{
-				var user = await this.UserRepository
+				var user = await this.UserRepository1
 					.FindByUsername(userViewModel.Username);
 
 				if (user == null)
@@ -101,6 +99,27 @@ namespace BLL.Management
 					Exception = ex
 				};
 			}
+		}
+		public async Task<(List<UserListViewModel>, int)> ListUsers(int page, int perPage)
+		{
+			var getPageCountTask = this.UserRepository1.GetUsersCount();
+			var getUsersTask = this.UserRepository2.GetUsers(page, perPage);
+
+			await Task.WhenAll(getPageCountTask, getUsersTask);
+
+			int pageCount = await getPageCountTask;
+			var users = await getUsersTask;
+
+			return (users.Select((u, index) => new UserListViewModel
+			{
+				Id = u.Id,
+				Username = u.Username,
+				FirstName = u.FirstName,
+				LastName = u.LastName,
+				NationalCode = u.NationalCode,
+				BirthDate = u.BirthDate,
+				RowIndex = ((page - 1) * perPage) + index + 1
+			}).ToList(), pageCount);
 		}
 	}
 }

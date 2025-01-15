@@ -17,16 +17,19 @@ namespace DAL.EF.Repository
 					._dbSet
 					.Include(u => u.Roles)
 					.FirstOrDefaultAsync(u => u.Username == username);
-
-			/*
-			var user = await this._context.Set<User>().FirstOrDefaultAsync(u => u.Username == username);
-
-			if (user != null)
-			{
-				await this._context.Entry(user).Collection(u => u.Roles).LoadAsync();
-			}
-
-			return user;*/
 		}
+		public async Task<int> GetUsersCount()
+		{
+			return await this._dbSet.CountAsync();
+		}
+		public async Task<List<User>> GetUsers(int page, int perPage)
+		{
+			return await this._dbSet
+				.Include(u => u.Roles)
+				.Skip((page - 1) * perPage)
+				.Take(perPage)
+				.ToListAsync();
+		}
+
 	}
 }

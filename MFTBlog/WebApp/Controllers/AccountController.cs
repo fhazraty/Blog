@@ -1,6 +1,8 @@
 ﻿using BLL.Management;
 using BLL.Model;
+using DAL.EF;
 using DAL.EF.Model;
+using DAL.EF.Repository;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -10,10 +12,10 @@ namespace WebApp.Controllers
 {
 	public class AccountController : BaseController
 	{
-		public IUserManagement Usermanagement { get; set; }
+		public IUserManagement UserManagement { get; set; }
 		public AccountController()
 		{
-			this.Usermanagement = new Usermanagement();
+			this.UserManagement = new UserManagement(new UserRepository(new BlogContext()), new UserRepository(new BlogContext()), new RoleRepository(new BlogContext()));
 		}
 		[HttpGet]
 		public IActionResult Index()
@@ -23,7 +25,7 @@ namespace WebApp.Controllers
 		[HttpPost]
 		public async Task<IActionResult> TryToLogin(LoginViewModel loginViewModel)
 		{
-			var usr = await Usermanagement.FindUser(new UserViewModel()
+			var usr = await UserManagement.FindUser(new UserViewModel()
 			{
 				Username = loginViewModel.Username,
 				Password = loginViewModel.Password
@@ -74,7 +76,7 @@ namespace WebApp.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-                var res = Usermanagement.AddUser(new UserViewModel()
+                var res = UserManagement.AddUser(new UserViewModel()
 				{
 					Username = model.Username,
 					Password = model.Password,

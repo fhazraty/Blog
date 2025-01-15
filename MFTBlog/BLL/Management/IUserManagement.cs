@@ -6,5 +6,6 @@ namespace BLL.Management
 	{
 		Task<ResultViewModel> AddUser(UserViewModel userViewModel);
 		Task<ResultViewModel> FindUser(UserViewModel userViewModel);
+		Task<(List<UserListViewModel>, int)> ListUsers(int page, int perPage);
 	}
 }

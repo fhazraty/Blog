@@ -127,6 +127,12 @@ namespace BLL.Management
 					};
 				}
 
+				if(post.Category is null)
+				{
+					post.Category = new Category() { Name = "" };
+				}
+
+
 				var postViewModel = new PostViewModel
 				{
 					AuthorName = post.Author.FirstName + " " + post.Author.LastName,

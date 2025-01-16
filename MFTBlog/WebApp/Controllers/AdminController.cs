@@ -67,6 +67,21 @@ namespace WebApp.Controllers
 			return Json(new { successful = true, users = users.Item1, userscount = users.Item2 });
 		}
 
+		[HttpDelete]
+		[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> DeleteUser(int id)
+		{
+			try
+			{
+				var result = await UserManagement.DeleteUserById(id);
+				return Json(new { successful = true });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { successful = false, message = "خطا رخ داده است!" });
+			}
+		}
+
 
 		[HttpGet]
 		[Authorize(Roles = "Admin")]

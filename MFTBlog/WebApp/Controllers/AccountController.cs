@@ -15,7 +15,9 @@ namespace WebApp.Controllers
 		public IUserManagement UserManagement { get; set; }
 		public AccountController()
 		{
-			this.UserManagement = new UserManagement(new UserRepository(new BlogContext()), new UserRepository(new BlogContext()), new RoleRepository(new BlogContext()));
+			var context = new BlogContext();
+
+			this.UserManagement = new UserManagement(new UserRepository(context), new UserRepository(new BlogContext()), new RoleRepository(context));
 		}
 		[HttpGet]
 		public IActionResult Index()

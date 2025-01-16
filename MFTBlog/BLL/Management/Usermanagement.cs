@@ -121,5 +121,36 @@ namespace BLL.Management
 				RowIndex = ((page - 1) * perPage) + index + 1
 			}).ToList(), pageCount);
 		}
+		public async Task<ResultViewModel> DeleteUserById(int userId)
+		{
+			try
+			{
+				var user = await this.UserRepository1.GetByIdAsync(userId);
+				if (user == null)
+				{
+					return new ResultEntityViewModel<User>
+					{
+						IsSuccessful = false,
+						Exception = new Exception("User not found")
+					};
+				}
+
+				await this.UserRepository1.DeleteAsync(userId);
+
+				return new ResultEntityViewModel<int>
+				{
+					IsSuccessful = true,
+					Entity = userId
+				};
+			}
+			catch (Exception ex)
+			{
+				return new ResultEntityViewModel<Exception>
+				{
+					IsSuccessful = false,
+					Exception = ex
+				};
+			}
+		}
 	}
 }

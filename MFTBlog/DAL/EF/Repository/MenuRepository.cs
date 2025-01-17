@@ -5,7 +5,7 @@ namespace DAL.EF.Repository
 {
 	public class MenuRepository : Repository<Menu>, IMenuRepository
 	{
-		public MenuRepository(DbContext context) : base(context)
+		public MenuRepository(BlogContext context) : base(context)
 		{
 		}
 	}

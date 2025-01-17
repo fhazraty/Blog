@@ -5,7 +5,7 @@ namespace DAL.EF.Repository
 {
 	public class UserRepository : Repository<User>, IUserRepository
 	{
-		public UserRepository(DbContext context) : base(context)
+		public UserRepository(BlogContext context) : base(context)
 		{
 		}
 		public async Task<User?> FindByUsername(string username)

@@ -14,24 +14,13 @@ namespace WebApp.Controllers
 		public ITagManagement TagManagement { get; set; }
 		public ICategoryManagement CategoryManagement { get; set; }
 		public IUploadedFileManagement UploadedFileManagement { get; set; }
-		public WriterController()
+		public WriterController(IPostManagement postManagement, ITagManagement tagManagement, ICategoryManagement categoryManagement, IUploadedFileManagement uploadedFileManagement)
 		{
-			var context = new BlogContext();
-			PostManagement =
-				new PostManagement(
-					new PostRepository(context),
-					new PostRepository(new BlogContext()),
-					new UserRepository(context), 
-					new CategoryRepository(context), 
-					new TagRepository(context));
-			TagManagement = new TagManagement(new TagRepository(context));
-			CategoryManagement = new CategoryManagement(new CategoryRepository(context));
-			UploadedFileManagement = new UploadedFileManagement
-				(
-				new UploadedFileRepository(context),
-				new UploadedFileRepository(new BlogContext())
-				);
-		}
+			this.PostManagement = postManagement;
+			this.TagManagement = tagManagement;
+			this.CategoryManagement = categoryManagement;
+			this.UploadedFileManagement = uploadedFileManagement;
+        }
 		[HttpGet]
 		[Authorize(Roles = "Writer")]
 		public IActionResult Index()

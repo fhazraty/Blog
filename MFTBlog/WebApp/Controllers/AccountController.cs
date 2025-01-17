@@ -13,11 +13,9 @@ namespace WebApp.Controllers
 	public class AccountController : BaseController
 	{
 		public IUserManagement UserManagement { get; set; }
-		public AccountController()
+		public AccountController(IUserManagement userManagement)
 		{
-			var context = new BlogContext();
-
-			this.UserManagement = new UserManagement(new UserRepository(context), new UserRepository(new BlogContext()), new RoleRepository(context));
+			this.UserManagement = userManagement;
 		}
 		[HttpGet]
 		public IActionResult Index()
@@ -74,32 +72,32 @@ namespace WebApp.Controllers
 			return View();
 		}
 		[HttpPost]
-		public IActionResult Register(RegisterViewModel model)
-		{
-			if (ModelState.IsValid)
-			{
-                var res = UserManagement.AddUser(new UserViewModel()
-				{
-					Username = model.Username,
-					Password = model.Password,
-					FirstName = model.FirstName,
-					LastName = model.LastName,
-					NationalCode = model.NationalCode,
-					BirthDate = ConvertToGregorianDateTime(model.BirthDate).Result,
-					Roles = new List<Role>()
-					{
-						new Role()
-						{
-							Name = "Writer"
-						}
-					}
-				});
+        public async Task<IActionResult> Register(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var res = await UserManagement.AddUser(new UserViewModel()
+                {
+                    Username = model.Username,
+                    Password = model.Password,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    NationalCode = model.NationalCode,
+                    BirthDate = ConvertToGregorianDateTime(model.BirthDate).Result,
+                    Roles = new List<Role>()
+                    {
+                        new Role()
+                        {
+                            Name = "Writer"
+                        }
+                    }
+                });
 
-				return RedirectToAction("Index","Account");
-			}
+                return RedirectToAction("Index", "Account");
+            }
 
-			return View(model);
-		}
+            return View(model);
+        }
 		[HttpGet]
 		public async Task<IActionResult> Logout()
 		{

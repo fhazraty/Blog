@@ -15,28 +15,13 @@ namespace WebApp.Controllers
 		public ICategoryManagement CategoryManagement { get; set; }
 		public IUploadedFileManagement UploadedFileManagement { get; set; }
 		public IUserManagement UserManagement { get; set; }
-		public AdminController()
+		public AdminController(IPostManagement postManagement, ITagManagement tagManagement, ICategoryManagement categoryManagement, IUploadedFileManagement uploadedFileManagement, IUserManagement userManagement)
 		{
-			var context = new BlogContext();
-			
-			PostManagement =
-				new PostManagement(
-					new PostRepository(context),
-					new PostRepository(new BlogContext()),
-					new UserRepository(context),
-					new CategoryRepository(context),
-					new TagRepository(context));
-			TagManagement = new TagManagement(new TagRepository(context));
-			
-			CategoryManagement = new CategoryManagement(new CategoryRepository(context));
-			
-			UploadedFileManagement = new UploadedFileManagement
-				(
-				new UploadedFileRepository(context),
-				new UploadedFileRepository(new BlogContext())
-				);
-
-			UserManagement = new UserManagement(new UserRepository(context),new UserRepository(new BlogContext()),new RoleRepository(context));
+			this.PostManagement = postManagement;
+			this.TagManagement = tagManagement;
+			this.CategoryManagement = categoryManagement;
+			this.UploadedFileManagement = uploadedFileManagement;
+			this.UserManagement = userManagement;
 		}
 		[Authorize(Roles = "Admin")]
 		public IActionResult Index()

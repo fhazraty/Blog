@@ -6,14 +6,15 @@ namespace DAL.EF.Repository
 {
 	public class PostRepository : Repository<Post>, IPostRepository
 	{
-		public PostRepository(DbContext context) : base(context)
+		public PostRepository(BlogContext context) : base(context)
 		{
 		}
 
 		public async Task<List<Post>> GetPosts(int page, int perpage)
 		{
 			return await _dbSet
-				.Include(p => p.Author)
+                .AsNoTracking()
+                .Include(p => p.Author)
 				.Include(p => p.Category)
 				.Include(p => p.Tags)
 				.OrderByDescending(p => p.CreatedAt)
@@ -24,7 +25,7 @@ namespace DAL.EF.Repository
 
 		public async Task<int> GetPostsCount()
 		{
-			return await _dbSet.CountAsync();
+			return await _dbSet.AsNoTracking().CountAsync();
 		}
 
 		public async Task<Post?> GetByIdAsync(int id)

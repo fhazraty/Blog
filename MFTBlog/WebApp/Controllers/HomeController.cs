@@ -16,23 +16,15 @@ namespace WebApp.Controllers
 		public IPostManagement PostManagement { get; set; }
 		public ITagManagement TagManagement { get; set; }
 		public ICategoryManagement CategoryManagement { get; set; }
-		public HomeController(ILogger<HomeController> logger)
+		public HomeController(ILogger<HomeController> logger,
+			IPostManagement postManagement,
+			ITagManagement tagManagement,
+			ICategoryManagement categoryManagement)
 		{
-			var context = new BlogContext();
-			
-			PostManagement =
-				new PostManagement(
-					new PostRepository(context),
-					new PostRepository(new BlogContext()),
-					new UserRepository(context),
-					new CategoryRepository(context),
-					new TagRepository(context));
-			
-			TagManagement = new TagManagement(new TagRepository(context));
-			
-			CategoryManagement = new CategoryManagement(new CategoryRepository(context));
-			
-            _logger = logger;
+            this._logger = logger;
+			this.PostManagement = postManagement;
+			this.TagManagement = tagManagement;
+			this.CategoryManagement = categoryManagement;
         }
 
         public IActionResult Index()

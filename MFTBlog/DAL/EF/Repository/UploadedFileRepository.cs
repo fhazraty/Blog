@@ -5,7 +5,7 @@ namespace DAL.EF.Repository
 {
 	public class UploadedFileRepository : Repository<UploadedFile>, IUploadedFileRepository
 	{
-		public UploadedFileRepository(DbContext context) : base(context)
+		public UploadedFileRepository(BlogContext context) : base(context)
 		{
 		}
 		public async Task<int> GetFilesCount()

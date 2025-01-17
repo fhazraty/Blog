@@ -5,7 +5,7 @@ namespace DAL.EF.Repository
 {
 	public class TagRepository : Repository<Tag>, ITagRepository
 	{
-		public TagRepository(DbContext context) : base(context)
+		public TagRepository(BlogContext context) : base(context)
 		{
 		}
 

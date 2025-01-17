@@ -6,19 +6,16 @@ namespace BLL.Management
 {
 	public class PostManagement : IPostManagement
 	{
-		public IPostRepository PostRepository1 { get; set; }
-		public IPostRepository PostRepository2 { get; set; }
+		public IPostRepository PostRepository { get; set; }
 		public IUserRepository UserRepository { get; set; }
 		public ICategoryRepository CategoryRepository { get; set; }
 		public ITagRepository TagRepository { get; set; }
-		public PostManagement(IPostRepository postRepository1,
-			IPostRepository postRepository2,
+		public PostManagement(IPostRepository postRepository,
 			IUserRepository userRepository,
 			ICategoryRepository categoryRepository,
 			ITagRepository tagRepository)
 		{
-			this.PostRepository1 = postRepository1;
-			this.PostRepository2 = postRepository2;
+			this.PostRepository = postRepository;
 			this.UserRepository = userRepository;
 			this.CategoryRepository = categoryRepository;
 			this.TagRepository = tagRepository;
@@ -42,7 +39,7 @@ namespace BLL.Management
 					post.Category = await CategoryRepository.GetByIdAsync(postViewModel.CategoryId.Value);
 				}
 
-				await this.PostRepository1.AddAsync(post);
+				await this.PostRepository.AddAsync(post);
 
 				return new ResultEntityViewModel<Post>
 				{
@@ -61,15 +58,10 @@ namespace BLL.Management
 		}
 		public async Task<(List<PostListViewModel>, int)> ListPost(int page, int perPage)
 		{
-			var getPageCountTask = this.PostRepository1.GetPostsCount();
-			var getPostsTask = this.PostRepository2.GetPosts(page, perPage);
+			int pageCount = await this.PostRepository.GetPostsCount();
+            var posts = await this.PostRepository.GetPosts(page, perPage);
 
-			await Task.WhenAll(getPageCountTask, getPostsTask);
-
-			int pageCount = await getPageCountTask;
-			var posts = await getPostsTask;
-
-			return (posts.Select((p, index) => new PostListViewModel
+            return (posts.Select((p, index) => new PostListViewModel
 			{
 				Id = p.Id,
 				Title = p.Title,
@@ -84,7 +76,7 @@ namespace BLL.Management
 		{
 			try
 			{
-				var post = await this.PostRepository1.GetByIdAsync(postId);
+				var post = await this.PostRepository.GetByIdAsync(postId);
 				if (post == null)
 				{
 					return new ResultEntityViewModel<string>
@@ -94,7 +86,7 @@ namespace BLL.Management
 					};
 				}
 
-				await this.PostRepository1.DeleteAsync(postId);
+				await this.PostRepository.DeleteAsync(postId);
 
 				return new ResultEntityViewModel<int>
 				{
@@ -116,7 +108,7 @@ namespace BLL.Management
 		{
 			try
 			{
-				var post = await this.PostRepository1.GetByIdAsync(postId);
+				var post = await this.PostRepository.GetByIdAsync(postId);
 				if (post == null)
 				{
 					return new ResultEntityViewModel<Exception>
@@ -165,7 +157,7 @@ namespace BLL.Management
 		{
 			try
 			{
-				var post = await this.PostRepository1.GetByIdAsync(postViewModel.Id);
+				var post = await this.PostRepository.GetByIdAsync(postViewModel.Id);
 				if (post == null)
 				{
 					return new ResultEntityViewModel<string>
@@ -189,7 +181,7 @@ namespace BLL.Management
 					post.Category = null;
 				}
 
-				await this.PostRepository1.UpdateAsync(post);
+				await this.PostRepository.UpdateAsync(post);
 
 				return new ResultEntityViewModel<Post>
 				{

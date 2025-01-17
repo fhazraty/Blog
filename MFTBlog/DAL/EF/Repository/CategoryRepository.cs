@@ -5,7 +5,7 @@ namespace DAL.EF.Repository
 {
 	public class CategoryRepository : Repository<Category>, ICategoryRepository
 	{
-		public CategoryRepository(DbContext context) : base(context)
+		public CategoryRepository(BlogContext context) : base(context)
 		{
 		}
 		public async Task<Category?> GetByIdAsync(int id)

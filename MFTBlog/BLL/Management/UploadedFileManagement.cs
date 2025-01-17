@@ -53,19 +53,11 @@ namespace BLL.Management
 		}
 		public async Task<(List<FileListViewModel>, int)> ListFiles(int page, int perPage)
 		{
-			// دو وظیفه موازی: گرفتن تعداد کل فایل‌ها و فایل‌های صفحه موردنظر
-			var getPageCountTask = this.UploadedFileRepository1.GetFilesCount();
-			var getFilesTask = this.UploadedFileRepository2.GetFiles(page, perPage);
+			int fileCount = await this.UploadedFileRepository1.GetFilesCount();
+            var files = await this.UploadedFileRepository2.GetFiles(page, perPage);
 
-			// صبر برای اتمام وظایف
-			await Task.WhenAll(getPageCountTask, getFilesTask);
-
-			// دریافت نتایج
-			int fileCount = await getPageCountTask;
-			var files = await getFilesTask;
-
-			// تبدیل نتایج به ViewModel
-			return (files.Select((f, index) => new FileListViewModel
+            // تبدیل نتایج به ViewModel
+            return (files.Select((f, index) => new FileListViewModel
 			{
 				Id = f.Id,
 				Title = f.Title,

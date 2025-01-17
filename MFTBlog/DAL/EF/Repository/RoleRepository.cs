@@ -5,7 +5,7 @@ namespace DAL.EF.Repository
 {
 	public class RoleRepository : Repository<Role>, IRoleRepository
 	{
-		public RoleRepository(DbContext context) : base(context)
+		public RoleRepository(BlogContext context) : base(context)
 		{
 		}
 

@@ -8,14 +8,11 @@ namespace BLL.Management
 {
 	public class UserManagement : IUserManagement
 	{
-		private DbContext _context;
-		public IUserRepository UserRepository1 { get; set; }
-		public IUserRepository UserRepository2 { get; set; }
+		public IUserRepository UserRepository { get; set; }
 		public IRoleRepository RoleRepository { get; set; }
-		public UserManagement(IUserRepository userRepository1, IUserRepository userRepository2, IRoleRepository roleRepository)
+		public UserManagement(IUserRepository userRepository, IRoleRepository roleRepository)
 		{
-			UserRepository1 = userRepository1;
-			UserRepository2 = userRepository2;
+			UserRepository = userRepository;
 			RoleRepository = roleRepository;
 		}
 		public async Task<ResultViewModel> AddUser(UserViewModel userViewModel)
@@ -43,7 +40,7 @@ namespace BLL.Management
 					usr.Roles.Add(roleEntity);
 				}
 
-				await this.UserRepository1.AddAsync(usr);
+				await this.UserRepository.AddAsync(usr);
 
 				return new ResultEntityViewModel<User>
 				{
@@ -64,8 +61,7 @@ namespace BLL.Management
 		{
 			try
 			{
-				var user = await this.UserRepository1
-					.FindByUsername(userViewModel.Username);
+				var user = await this.UserRepository.FindByUsername(userViewModel.Username);
 
 				if (user == null)
 				{
@@ -102,15 +98,10 @@ namespace BLL.Management
 		}
 		public async Task<(List<UserListViewModel>, int)> ListUsers(int page, int perPage)
 		{
-			var getPageCountTask = this.UserRepository1.GetUsersCount();
-			var getUsersTask = this.UserRepository2.GetUsers(page, perPage);
+			int pageCount = await this.UserRepository.GetUsersCount();
+            var users = await this.UserRepository.GetUsers(page, perPage);
 
-			await Task.WhenAll(getPageCountTask, getUsersTask);
-
-			int pageCount = await getPageCountTask;
-			var users = await getUsersTask;
-
-			return (users.Select((u, index) => new UserListViewModel
+            return (users.Select((u, index) => new UserListViewModel
 			{
 				Id = u.Id,
 				Username = u.Username,
@@ -125,7 +116,7 @@ namespace BLL.Management
 		{
 			try
 			{
-				var user = await this.UserRepository1.GetByIdAsync(userId);
+				var user = await this.UserRepository.GetByIdAsync(userId);
 				if (user == null)
 				{
 					return new ResultEntityViewModel<User>
@@ -135,7 +126,7 @@ namespace BLL.Management
 					};
 				}
 
-				await this.UserRepository1.DeleteAsync(userId);
+				await this.UserRepository.DeleteAsync(userId);
 
 				return new ResultEntityViewModel<int>
 				{

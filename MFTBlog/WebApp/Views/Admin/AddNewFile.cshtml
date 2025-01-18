@@ -37,23 +37,25 @@
     <script src="~/lib/kendo/js/kendo.all.min.js"></script>
     <script>
         $(document).ready(function () {
-                    $("#fileUploader").kendoUpload({
-                        async: {
-                            saveUrl: "/Admin/AddNewFile",
-                            autoUpload: true
-                        },
-                        validation: {
-                            allowedExtensions: [".jpg", ".png"],
-                            maxFileSize: 10485760 // 10 MB
-                        },
-                        multiple: true,
-                        success: function (e) {
-                            console.log("Upload success:", e);
-                        },
-                        error: function (e) {
-                            console.log("Upload error:", e);
-                        }
-                    });
-                });
+            $('#fileItem').toggleClass('active',500);
+                    
+            $("#fileUploader").kendoUpload({
+                async: {
+                    saveUrl: "/Admin/AddNewFile",
+                    autoUpload: true
+                },
+                validation: {
+                    allowedExtensions: [".jpg", ".png"],
+                    maxFileSize: 10485760 // 10 MB
+                },
+                multiple: true,
+                success: function (e) {
+                    console.log("Upload success:", e);
+                },
+                error: function (e) {
+                    console.log("Upload error:", e);
+                }
+            });
+        });
     </script>
 }

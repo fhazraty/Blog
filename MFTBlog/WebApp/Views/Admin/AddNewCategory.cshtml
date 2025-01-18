@@ -34,6 +34,8 @@
 @section BottomJS {
     <script>
         $(document).ready(function () {
+            $('#categoryItem').toggleClass('active',500);
+
             $('#addCategoryForm').on('submit', function (e) {
                 e.preventDefault();
                 var categoryName = $('#categoryName').val();

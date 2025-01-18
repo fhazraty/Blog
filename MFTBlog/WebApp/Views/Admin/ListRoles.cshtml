@@ -2,3 +2,13 @@
     ViewData["Title"] = "لیست رول‌ها";
     Layout = "/Views/Shared/_AdminLayout.cshtml";
 }
+
+
+@section BottomJS
+{
+    <script>
+        $(document).ready(function() {
+            $('#roleItem').toggleClass('active',500);
+        })
+    </script>
+}

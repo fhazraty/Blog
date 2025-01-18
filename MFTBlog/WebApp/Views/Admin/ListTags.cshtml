@@ -50,6 +50,8 @@
     <script src="~/lib/kendo/js/kendo.all.min.js"></script>
     <script>
         $(document).ready(function () {
+            $('#tagItem').toggleClass('active',500);
+
             kendo.culture("fa-IR");
             kendo.ui.Grid.prototype.options.messages = {
                 commands: {

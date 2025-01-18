@@ -2,3 +2,14 @@
     ViewData["Title"] = "لیست منو‌ها";
     Layout = "/Views/Shared/_AdminLayout.cshtml";
 }
+
+
+
+@section BottomJS
+{
+    <script>
+        $(document).ready(function() {
+            $('#menuItem').toggleClass('active',500);
+        })
+    </script>
+}

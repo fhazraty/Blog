@@ -58,5 +58,29 @@ namespace BLL.Management
 		/// A result indicating the success or failure of the operation. / نتیجه‌ای که موفقیت یا شکست عملیات را نشان می‌دهد.
 		/// </returns>
 		Task<ResultViewModel> DeleteUserById(int userId);
+		
+		/// <summary>
+		/// Retrieves a user by their ID.
+		/// یک کاربر را بر اساس شناسه آن بازیابی می‌کند.
+		/// </summary>
+		/// <param name="userId">
+		/// The ID of the user to be retrieved. / شناسه کاربری که باید بازیابی شود.
+		/// </param>
+		/// <returns>
+		/// A result containing the user if found or an error if not. / نتیجه‌ای که شامل کاربر در صورت یافتن یا خطا در غیر این صورت است.
+		/// </returns>
+		Task<ResultViewModel> GetUserById(int userId);
+
+		/// <summary>
+		/// Updates an existing user in the system.
+		/// یک کاربر موجود در سیستم را به‌روزرسانی می‌کند.
+		/// </summary>
+		/// <param name="userViewModel">
+		/// The user details to be updated. / جزئیات کاربری که باید به‌روزرسانی شود.
+		/// </param>
+		/// <returns>
+		/// A result indicating the success or failure of the operation. / نتیجه‌ای که موفقیت یا شکست عملیات را نشان می‌دهد.
+		/// </returns>
+		Task<ResultViewModel> UpdateUser(UserViewModel userViewModel);
 	}
 }

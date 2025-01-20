@@ -51,6 +51,85 @@ namespace WebApp.Controllers
 
 			return Json(new { successful = true, users = users.Item1, userscount = users.Item2 });
 		}
+		[HttpGet]
+		[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> EditUser(int userId)
+		{
+			ViewBag.UserId = userId;
+
+			return View();
+		}
+		[HttpPost]
+		[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> UpdateEditUser([FromBody] EditUserViewModel userViewModel)
+		{
+			// حذف اعتبارسنجی فیلد Password از ModelState
+			ModelState.Remove(nameof(userViewModel.Password));
+
+			if (!ModelState.IsValid)
+			{
+				string errorMsg = "";
+
+				foreach (var state in ModelState)
+				{
+					foreach (var error in state.Value.Errors)
+					{
+						errorMsg += error.ErrorMessage;
+					}
+				}
+
+				return Json(new { successful = false, message = errorMsg });
+			}
+
+			if (!userViewModel.Id.HasValue)
+			{
+				return Json(new { successful = false, message = "کاربر یافت نشد!" });
+			}
+
+			var user = new UserViewModel
+			{
+				Id = userViewModel.Id.Value,
+				FirstName = userViewModel.FirstName,
+				LastName = userViewModel.LastName,
+				NationalCode = userViewModel.NationalCode,
+				Username = userViewModel.Username,
+				Password = userViewModel.Password,
+				BirthDate = await ConvertToGregorianDateTime(userViewModel.BirthDate)
+			};
+
+			var result = await UserManagement.UpdateUser(user);
+
+			if (result.IsSuccessful)
+			{
+				return Json(new { successful = true });
+			}
+
+			return Json(new { successful = false, message = result.Message });
+		}
+
+
+		[HttpGet]
+		[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> GetUserData(int userId)
+		{
+			var user = await UserManagement.GetUserById(userId);
+
+			if (user == null)
+			{
+				return Json(new { successful = false, message = "کاربر یافت نشد." });
+			}
+
+			var userData = (ResultEntityViewModel<UserListViewModel>)user;
+
+			if (userData.IsSuccessful)
+			{
+				userData.Entity.PersianBirthDate = await ConvertToPersianDateTime(userData.Entity.BirthDate);
+
+				return Json(new { successful = true, user = userData.Entity });
+			}
+
+			return Json(new { successful = false });
+		}
 
 		[HttpDelete]
 		[Authorize(Roles = "Admin")]
@@ -549,6 +628,7 @@ namespace WebApp.Controllers
 				return Json(new { successful = false, message = "خطا رخ داده است!" });
 			}
 		}
+		
 		#endregion
 	}
 }

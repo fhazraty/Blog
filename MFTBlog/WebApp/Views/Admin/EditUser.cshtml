@@ -1,0 +1,134 @@
+﻿@{
+    ViewData["Title"] = "ویرایش کاربر";
+    Layout = "/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h4>ویرایش اطلاعات کاربر</h4>
+                </div>
+                <div class="card-body">
+                    <form id="editUserForm">
+                        <div class="mb-3">
+                            <label class="form-label">نام</label>
+                            <input type="text" id="FirstName" name="FirstName" class="form-control" placeholder="نام را وارد کنید">
+                            <div class="text-danger" id="FirstNameError"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">نام خانوادگی</label>
+                            <input type="text" id="LastName" name="LastName" class="form-control" placeholder="نام خانوادگی را وارد کنید">
+                            <div class="text-danger" id="LastNameError"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">کد ملی</label>
+                            <input type="text" id="NationalCode" name="NationalCode" class="form-control" placeholder="کد ملی را وارد کنید">
+                            <div class="text-danger" id="NationalCodeError"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">نام کاربری</label>
+                            <input type="text" id="Username" name="Username" class="form-control mustbeLTRTyping" placeholder="نام کاربری را وارد کنید">
+                            <div class="text-danger" id="UsernameError"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">رمز عبور</label>
+                            <input type="password" id="Password" name="Password" class="form-control mustbeLTRTyping" placeholder="رمز عبور را وارد کنید">
+                            <div class="text-danger" id="PasswordError"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">تاریخ تولد</label>
+                            <input id="BirthDateDatePicker" name="BirthDateDatePicker" class="form-control" autocomplete="off" placeholder="تاریخ تولد را وارد کنید" />
+                            <div class="text-danger" id="BirthDateError"></div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="button" id="btnUpdate" class="btn btn-primary">ویرایش اطلاعات</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section BottomJS
+{
+    <link href="~/lib/bootstrap-datepicker/f-bootstrap-datepicker.min.css" rel="stylesheet" />
+    <script src="~/lib/bootstrap-datepicker/f-bootstrap-datepicker.min.js"></script>
+    <script src="~/lib/bootstrap-datepicker/f-bootstrap-datepicker.fa.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // دریافت اطلاعات کاربر
+            $.ajax({
+                url: '/Admin/GetUserData?userId=@ViewBag.UserId',  // مسیر دریافت اطلاعات کاربر
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    debugger;
+                    if (response.successful) {
+                        $('#FirstName').val(response.user.firstName);
+                        $('#LastName').val(response.user.lastName);
+                        $('#NationalCode').val(response.user.nationalCode);
+                        $('#Username').val(response.user.username);
+                        $('#Password').val(response.user.password);
+                        $('#BirthDateDatePicker').val(response.user.persianBirthDate);
+                    }
+                },
+                error: function () {
+                    alert('خطا در دریافت اطلاعات کاربر.');
+                }
+            });
+
+            // ارسال اطلاعات فرم برای به‌روزرسانی کاربر
+            $('#btnUpdate').click(function () {
+                var formData = {
+                    Id: @ViewBag.UserId,
+                    FirstName: $('#FirstName').val(),
+                    LastName: $('#LastName').val(),
+                    NationalCode: $('#NationalCode').val(),
+                    Username: $('#Username').val(),
+                    Password: $('#Password').val(),
+                    BirthDate: $('#BirthDateDatePicker').val()
+                };
+
+                $.ajax({
+                    url: '/Admin/UpdateEditUser',  // مسیر به‌روزرسانی اطلاعات کاربر
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(formData),
+                    success: function (response) {
+                        if (response.successful) {
+                            alert('اطلاعات با موفقیت به‌روزرسانی شد.');
+                            window.location.assign("../../Admin/ListUsers");
+                        } else {
+                            alert('خطا در به‌روزرسانی اطلاعات.');
+                        }
+                    },
+                    error: function () {
+                        alert('خطا در ارسال اطلاعات.');
+                    }
+                });
+            });
+
+
+            $("#BirthDateDatePicker")
+            .datepicker({
+                dateFormat: "yy/m/d",
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-100:+100" // last hundred years
+                //maxDate: moment().add(10, 'year').toDate()
+            });
+        });
+    </script>
+}

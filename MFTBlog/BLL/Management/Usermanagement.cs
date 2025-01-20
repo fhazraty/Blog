@@ -257,5 +257,135 @@ namespace BLL.Management
 				};
 			}
 		}
+		/// <summary>
+		/// Retrieves a user by their ID.
+		/// یک کاربر را بر اساس شناسه بازیابی می‌کند.
+		/// </summary>
+		/// <param name="userId">The ID of the user to retrieve. / شناسه کاربر برای بازیابی.</param>
+		/// <returns>
+		/// A result containing the user if found or an error if not. / نتیجه‌ای که شامل کاربر در صورت یافتن یا خطا در غیر این صورت است.
+		/// </returns>
+		public async Task<ResultViewModel> GetUserById(int userId)
+		{
+			try
+			{
+				// Retrieve the user by ID.
+				// جستجوی کاربر بر اساس شناسه.
+				var user = await this.UserRepository.GetByIdAsync(userId);
+
+				// Check if the user exists.
+				// بررسی وجود کاربر.
+				if (user == null)
+				{
+					// Return failure if the user is not found.
+					// بازگرداندن نتیجه شکست در صورت عدم وجود کاربر.
+					return new ResultEntityViewModel<User>
+					{
+						IsSuccessful = false,
+						Exception = new Exception("User not found")
+					};
+				}
+
+				// Return success result with the user entity.
+				// بازگرداندن نتیجه موفقیت به همراه کاربر.
+				return new ResultEntityViewModel<UserListViewModel>
+				{
+					IsSuccessful = true,
+					Entity = new UserListViewModel()
+					{
+						Id = user.Id,
+						FirstName = user.FirstName,
+						LastName = user.LastName,
+						NationalCode = user.NationalCode,
+						Username = user.Username,
+						Password = "",
+						BirthDate = user.BirthDate,
+						Roles = user.Roles
+					}
+				};
+			}
+			catch (Exception ex)
+			{
+				// Return failure result in case of an exception.
+				// بازگرداندن نتیجه شکست در صورت بروز خطا.
+				return new ResultEntityViewModel<Exception>
+				{
+					IsSuccessful = false,
+					Exception = ex
+				};
+			}
+		}
+		/// <summary>
+		/// Updates an existing user with the provided details.
+		/// یک کاربر موجود را با جزئیات ارائه شده به‌روزرسانی می‌کند.
+		/// </summary>
+		/// <param name="userViewModel">
+		/// The user details to update. / جزئیات کاربر برای به‌روزرسانی.
+		/// </param>
+		/// <returns>
+		/// A result indicating success or failure. / نتیجه‌ای که موفقیت یا شکست را نشان می‌دهد.
+		/// </returns>
+		public async Task<ResultViewModel> UpdateUser(UserViewModel userViewModel)
+		{
+			try
+			{
+				// Retrieve the user by ID.
+				// جستجوی کاربر بر اساس شناسه.
+				var user = await this.UserRepository.GetByIdAsync(userViewModel.Id);
+
+				// Check if the user exists.
+				// بررسی وجود کاربر.
+				if (user == null)
+				{
+					// Return failure if the user is not found.
+					// بازگرداندن نتیجه شکست در صورت عدم وجود کاربر.
+					return new ResultEntityViewModel<User>
+					{
+						IsSuccessful = false,
+						Exception = new Exception("User not found")
+					};
+				}
+
+				// Update user details.
+				// به‌روزرسانی جزئیات کاربر.
+				user.FirstName = userViewModel.FirstName;
+				user.LastName = userViewModel.LastName;
+				user.NationalCode = userViewModel.NationalCode;
+				user.Username = userViewModel.Username;
+				user.BirthDate = userViewModel.BirthDate;
+
+				// Update password if provided.
+				// به‌روزرسانی رمز عبور در صورت ارائه.
+				if (!string.IsNullOrEmpty(userViewModel.Password))
+				{
+					string salt = Guid.NewGuid().ToString();
+					user.PasswordHash = Security.HashPasswordSHA3(userViewModel.Password, salt);
+					user.Salt = salt;
+					user.PasswordUpdatedAt = DateTime.Now;
+				}
+
+				// Update the user in the database.
+				// به‌روزرسانی کاربر در پایگاه داده.
+				await this.UserRepository.UpdateAsync(user);
+
+				// Return success result.
+				// بازگرداندن نتیجه موفقیت.
+				return new ResultEntityViewModel<User>
+				{
+					IsSuccessful = true,
+					Entity = user
+				};
+			}
+			catch (Exception ex)
+			{
+				// Return failure result in case of an exception.
+				// بازگرداندن نتیجه شکست در صورت بروز خطا.
+				return new ResultEntityViewModel<Exception>
+				{
+					IsSuccessful = false,
+					Exception = ex
+				};
+			}
+		}
 	}
 }

@@ -2,8 +2,6 @@
     Layout = "~/Views/Shared/_PagesLayout.cshtml";
 }
 
-@model WebApp.ViewModel.RegisterViewModel
-
 <style>
     input::placeholder {
         direction: rtl;
@@ -24,75 +22,48 @@
                     <h4>ثبت‌نام در سامانه</h4>
                 </div>
                 <div class="card-body">
-                    @using (Html.BeginForm("Register", "Account", FormMethod.Post))
-                    {
-                        <!-- فیلد FirstName -->
+                    <form id="registerForm">
                         <div class="mb-3">
                             <label for="inputFirstName" class="form-label">نام</label>
-                            @Html.TextBoxFor(model => model.FirstName, new
-                                {
-                                    @class = "form-control",
-                                    @placeholder = "نام را وارد کنید"
-                                })
-                            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                            <input type="text" id="FirstName" name="FirstName" class="form-control" placeholder="نام را وارد کنید" />
+                            <span class="text-danger" id="FirstNameError"></span>
                         </div>
 
-                        <!-- فیلد LastName -->
                         <div class="mb-3">
                             <label for="inputLastName" class="form-label">نام خانوادگی</label>
-                            @Html.TextBoxFor(model => model.LastName, new
-                                {
-                                    @class = "form-control",
-                                    @placeholder = "نام خانوادگی را وارد کنید"
-                                })
-                            @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                            <input type="text" id="LastName" name="LastName" class="form-control" placeholder="نام خانوادگی را وارد کنید" />
+                            <span class="text-danger" id="LastNameError"></span>
                         </div>
 
-                        <!-- فیلد NationalCode -->
                         <div class="mb-3">
                             <label for="inputNationalCode" class="form-label">کد ملی</label>
-                            @Html.TextBoxFor(model => model.NationalCode, new
-                                {
-                                    @class = "form-control",
-                                    @placeholder = "کد ملی را وارد کنید"
-                                })
-                            @Html.ValidationMessageFor(model => model.NationalCode, "", new { @class = "text-danger" })
+                            <input type="text" id="NationalCode" name="NationalCode" class="form-control" placeholder="کد ملی را وارد کنید" />
+                            <span class="text-danger" id="NationalCodeError"></span>
                         </div>
 
-                        <!-- فیلد Username -->
                         <div class="mb-3">
                             <label for="inputUsername" class="form-label">نام کاربری</label>
-                            @Html.TextBoxFor(model => model.Username, new
-                                {
-                                    @class = "form-control mustbeLTRTyping",
-                                    @placeholder = "نام کاربری را وارد کنید"
-                                })
-                            @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+                            <input type="text" id="Username" name="Username" class="form-control mustbeLTRTyping" placeholder="نام کاربری را وارد کنید" />
+                            <span class="text-danger" id="UsernameError"></span>
                         </div>
 
-                        <!-- فیلد Password -->
                         <div class="mb-3">
                             <label for="inputPassword" class="form-label">رمز عبور</label>
-                            @Html.PasswordFor(model => model.Password, new
-                                {
-                                    @class = "form-control mustbeLTRTyping",
-                                    @placeholder = "رمز عبور را وارد کنید"
-                                })
-                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                            <input type="password" id="Password" name="Password" class="form-control mustbeLTRTyping" placeholder="رمز عبور را وارد کنید" />
+                            <span class="text-danger" id="PasswordError"></span>
                         </div>
 
-                        <!-- فیلد BirthDate -->
                         <div class="mb-3">
                             <label for="inputBirthDate" class="form-label">تاریخ تولد</label>
-                            <input id="datepicker" name="BirthDate" class="form-control" autocomplete="off" />
-                            @Html.ValidationMessageFor(model => model.BirthDate, "", new { @class = "text-danger" })
+                            <input id="BirthDate" name="BirthDate" class="form-control" autocomplete="off" />
+                            <span class="text-danger" id="BirthDateError"></span>
+
                         </div>
 
-                        <!-- دکمه ثبت‌نام -->
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">ثبت‌نام</button>
+                            <button type="button" id="btnRegister" class="btn btn-primary">ثبت‌نام</button>
                         </div>
-                    }
+                    </form>
                 </div>
                 <div class="card-footer text-center">
                     <small>قبلاً ثبت‌نام کرده‌اید؟ <a href="/Account/">ورود</a></small>
@@ -106,19 +77,45 @@
 <script src="~/lib/bootstrap-datepicker/f-bootstrap-datepicker.min.js"></script>
 <script src="~/lib/bootstrap-datepicker/f-bootstrap-datepicker.fa.min.js"></script>
 
-
 <script>
-
     $(document).ready(function(){
-        $("#datepicker")
-                .datepicker({
-                    dateFormat: "yy/m/d",
-                    changeMonth: true,
-                    changeYear: true,
-                    yearRange: "-100:+100" // last hundred years
+        $("#BirthDate").datepicker({
+            dateFormat: "yy/m/d",
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+100"
+        });
 
-                    //maxDate: moment().add(10, 'year').toDate()
-                });
+        $("#btnRegister").click(function(){
+            var formData = {
+                FirstName: $("#FirstName").val(),
+                LastName: $("#LastName").val(),
+                NationalCode: $("#NationalCode").val(),
+                Username: $("#Username").val(),
+                Password: $("#Password").val(),
+                BirthDate: $("#BirthDate").val()
+            };
+
+            $.ajax({
+                url: "/Account/Register",
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function(response) {
+                    if(response.success) {
+                        alert("ثبت‌نام با موفقیت انجام شد");
+                        window.location.href = "/Account/Index";
+                    } else {
+                        $(".text-danger").text("");
+                        $.each(response.errors, function(key, value){
+                            $("#" + key + "Error").text(value);
+                        });
+                    }
+                },
+                error: function() {
+                    alert("خطا در ارسال اطلاعات. لطفا مجددا تلاش کنید.");
+                }
+            });
+        });
     });
 </script>
-

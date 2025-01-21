@@ -62,42 +62,49 @@ namespace WebApp.Controllers
 			return View();
 		}
 		[HttpGet]
-		public IActionResult RegisterUserAdmin()
-		{
-			return View();
-		}
-		[HttpGet]
 		public IActionResult RegisterUserWriter()
 		{
 			return View();
 		}
 		[HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var res = await UserManagement.AddUser(new UserViewModel()
-                {
-                    Username = model.Username,
-                    Password = model.Password,
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                    NationalCode = model.NationalCode,
-                    BirthDate = ConvertToGregorianDateTime(model.BirthDate).Result,
-                    Roles = new List<Role>()
-                    {
-                        new Role()
-                        {
-                            Name = "Writer"
-                        }
-                    }
-                });
+		public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
+		{
+			if (ModelState.IsValid)
+			{
+				var res = await UserManagement.AddUser(new UserViewModel()
+				{
+					Username = model.Username,
+					Password = model.Password,
+					FirstName = model.FirstName,
+					LastName = model.LastName,
+					NationalCode = model.NationalCode,
+					BirthDate = await ConvertToGregorianDateTime(model.BirthDate),
+					Roles = new List<Role>()
+					{
+						new Role()
+						{
+							Name = "Writer"
+						}
+					}
+				});
 
-                return RedirectToAction("Index", "Account");
-            }
+				if (res.IsSuccessful)
+				{
+					return Json(new { success = true, message = "ثبت‌نام با موفقیت انجام شد" });
+				}
+				else
+				{
+					return Json(new { success = false, message = "خطا در ثبت‌نام، لطفا مجددا تلاش کنید" });
+				}
+			}
 
-            return View(model);
-        }
+			var errors = ModelState
+				.Where(x => x.Value.Errors.Any())
+				.ToDictionary(k => k.Key, v => v.Value.Errors.Select(e => e.ErrorMessage).FirstOrDefault());
+
+			return Json(new { success = false, errors });
+		}
+
 		[HttpGet]
 		public async Task<IActionResult> Logout()
 		{

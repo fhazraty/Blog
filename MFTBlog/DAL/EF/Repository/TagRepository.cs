@@ -49,5 +49,9 @@ namespace DAL.EF.Repository
 				.Include(t => t.Posts) // Includes related posts. / شامل پست‌های مرتبط.
 				.FirstOrDefaultAsync(t => t.Id == id);
 		}
-	}
+        public async Task<IEnumerable<Tag>> GetAllAsync()
+        {
+            return await _dbSet.AsNoTracking().ToListAsync();
+        }
+    }
 }

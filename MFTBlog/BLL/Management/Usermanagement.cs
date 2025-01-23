@@ -387,5 +387,107 @@ namespace BLL.Management
 				};
 			}
 		}
+		/// <summary>
+		/// Retrieves a list of all roles.
+		/// یک لیست از تمام نقش‌ها را بازیابی می‌کند.
+		/// </summary>
+		/// <returns>
+		/// A list of roles. / لیستی از نقش‌ها.
+		/// </returns>
+		public async Task<List<Role>> ListRoles()
+		{
+			try
+			{
+				// Retrieve all roles from the database.
+				// بازیابی تمام نقش‌ها از پایگاه داده.
+				var roles = await this.RoleRepository.GetAllAsync();
+
+				// Return the list of roles.
+				// بازگرداندن لیست نقش‌ها.
+				return roles.ToList();
+			}
+			catch (Exception ex)
+			{
+				// Log the exception and rethrow it.
+				// ثبت خطا و پرتاب مجدد آن.
+				throw new Exception("An error occurred while retrieving roles.", ex);
+			}
+		}
+		/// <summary>
+		/// Updates the roles of an existing user.
+		/// نقش‌های یک کاربر موجود را به‌روزرسانی می‌کند.
+		/// </summary>
+		/// <param name="userId">The ID of the user to update. / شناسه کاربر برای به‌روزرسانی.</param>
+		/// <param name="roles">The new roles to assign to the user. / نقش‌های جدید برای اختصاص به کاربر.</param>
+		/// <returns>
+		/// A result indicating success or failure. / نتیجه‌ای که موفقیت یا شکست را نشان می‌دهد.
+		/// </returns>
+		public async Task<ResultViewModel> UpdateUserRole(int userId, List<int> roles)
+		{
+			try
+			{
+				// Retrieve the user by ID.
+				// جستجوی کاربر بر اساس شناسه.
+				var user = await this.UserRepository.GetByIdAsync(userId);
+
+				// Check if the user exists.
+				// بررسی وجود کاربر.
+				if (user == null)
+				{
+					// Return failure if the user is not found.
+					// بازگرداندن نتیجه شکست در صورت عدم وجود کاربر.
+					return new ResultEntityViewModel<User>
+					{
+						IsSuccessful = false,
+						Exception = new KeyNotFoundException(),
+						Message = "کاربر یافت نشد!"
+					};
+				}
+
+				// Clear existing roles.
+				// پاک کردن نقش‌های موجود.
+				user.Roles.Clear();
+
+				// Add new roles to the user.
+				// افزودن نقش‌های جدید به کاربر.
+				foreach (var roleId in roles)
+				{
+					// Retrieve the role entity by name from the database.
+					// بازیابی نقش از پایگاه داده بر اساس نام.
+					var roleEntity = await this.RoleRepository.GetByIdAsync(roleId);
+
+					// Add the role to the user's role collection.
+					// افزودن نقش به لیست نقش‌های کاربر.
+					user.Roles.Add(roleEntity);
+				}
+
+				// Update the user in the database.
+				// به‌روزرسانی کاربر در پایگاه داده.
+				await this.UserRepository.UpdateAsync(user);
+
+				// Return success result.
+				// بازگرداندن نتیجه موفقیت.
+				return new ResultEntityViewModel<User>
+				{
+					IsSuccessful = true,
+					Entity = user
+				};
+			}
+			catch (Exception ex)
+			{
+				// Return failure result in case of an exception.
+				// بازگرداندن نتیجه شکست در صورت بروز خطا.
+				return new ResultEntityViewModel<Exception>
+				{
+					IsSuccessful = false,
+					Exception = ex
+				};
+			}
+		}
+
+
+
+
+
 	}
 }

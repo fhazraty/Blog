@@ -1,0 +1,78 @@
+﻿@{
+    ViewData["Title"] = "ویرایش نقش کاربر";
+    Layout = "/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h4>ویرایش نقش کاربر</h4>
+                </div>
+                <div class="card-body">
+                    <form id="editUserForm">
+                        <input type="hidden" id="UserId" value="@ViewBag.UserId" />
+
+                        <div class="mb-3">
+                            <label class="form-label">نقش</label>
+                            <select id="Role" name="UserRoleIdList" class="form-control">
+                            </select>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="button" id="btnUpdate" class="btn btn-primary">ویرایش اطلاعات</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section BottomJS
+{
+    <script>
+        $(document).ready(function () {
+            // بارگذاری نقش‌ها از سرور
+            $.ajax({
+                url: '/Admin/ListRolesData',
+                method: 'GET',
+                success: function (data) {
+                    var roleSelect = $('#Role');
+                    roleSelect.empty();
+                    $.each(data.roles, function (index, role) {
+                        roleSelect.append($('<option>', {
+                            value: role.id,
+                            text: role.name
+                        }));
+                    });
+                },
+                error: function () {
+                    alert('خطا در بارگذاری نقش‌ها.');
+                }
+            });
+
+            $('#btnUpdate').click(function () {
+                var formData = {
+                    UserId: $('#UserId').val(),
+                    UserRoleIdList: [parseInt($('#Role').val())]  // ارسال مقدار نقش به عنوان آرایه تک‌عضوی
+                };
+
+                $.ajax({
+                    url: '/Admin/UpdateUserRole',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(formData),
+                    success: function () {
+                        alert('ذخیره با موفقیت انجام شد.');
+                        window.location.assign("../../Admin/ListRoles");
+                    },
+                    error: function () {
+                        alert('خطا رخ داده است!');
+                    }
+                });
+            });
+        });
+    </script>
+}

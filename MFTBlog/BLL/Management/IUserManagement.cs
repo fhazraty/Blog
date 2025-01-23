@@ -1,4 +1,5 @@
 ﻿using BLL.Model;
+using DAL.EF.Model;
 
 namespace BLL.Management
 {
@@ -82,5 +83,28 @@ namespace BLL.Management
 		/// A result indicating the success or failure of the operation. / نتیجه‌ای که موفقیت یا شکست عملیات را نشان می‌دهد.
 		/// </returns>
 		Task<ResultViewModel> UpdateUser(UserViewModel userViewModel);
+		/// <summary>
+		/// Retrieves a list of all roles.
+		/// یک لیست از تمام نقش‌ها را بازیابی می‌کند.
+		/// </summary>
+		/// <returns>
+		/// A list of roles. / لیستی از نقش‌ها.
+		/// </returns>
+		Task<List<Role>> ListRoles();
+
+		/// <summary>
+		/// Updates the roles of an existing user in the system.
+		/// نقش‌های یک کاربر موجود در سیستم را به‌روزرسانی می‌کند.
+		/// </summary>
+		/// <param name="userId">
+		/// The ID of the user whose roles are to be updated. / شناسه کاربری که نقش‌های آن باید به‌روزرسانی شود.
+		/// </param>
+		/// <param name="roles">
+		/// The new list of roles for the user. / لیست جدید نقش‌ها برای کاربر.
+		/// </param>
+		/// <returns>
+		/// A result indicating the success or failure of the operation. / نتیجه‌ای که موفقیت یا شکست عملیات را نشان می‌دهد.
+		/// </returns>
+		Task<ResultViewModel> UpdateUserRole(int userId, List<int> roles);
 	}
 }

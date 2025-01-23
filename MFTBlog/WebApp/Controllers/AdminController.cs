@@ -53,12 +53,25 @@ namespace WebApp.Controllers
 		}
 		[HttpGet]
 		[Authorize(Roles = "Admin")]
-		public async Task<IActionResult> EditUser(int userId)
+		public IActionResult EditUser(int userId)
 		{
 			ViewBag.UserId = userId;
 
 			return View();
 		}
+		[HttpGet]
+		[Authorize(Roles = "Admin")]
+		public IActionResult EditRoleUser(int userId)
+		{
+			ViewBag.UserId = userId;
+
+			return View();
+		}
+
+
+
+
+
 		[HttpPost]
 		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> UpdateEditUser([FromBody] EditUserViewModel userViewModel)
@@ -106,8 +119,6 @@ namespace WebApp.Controllers
 
 			return Json(new { successful = false, message = result.Message });
 		}
-
-
 		[HttpGet]
 		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> GetUserData(int userId)
@@ -130,7 +141,6 @@ namespace WebApp.Controllers
 
 			return Json(new { successful = false });
 		}
-
 		[HttpDelete]
 		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> DeleteUser(int id)
@@ -145,13 +155,19 @@ namespace WebApp.Controllers
 				return Json(new { successful = false, message = "خطا رخ داده است!" });
 			}
 		}
-
-
 		[HttpGet]
 		[Authorize(Roles = "Admin")]
 		public IActionResult ListRoles()
 		{
 			return View();
+		}
+		[HttpGet]
+		[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> ListRolesData()
+		{
+			var roles = await UserManagement.ListRoles();
+
+			return Json(new { successful = true, roles = roles.ToList() });
 		}
 		[HttpGet]
 		[Authorize(Roles = "Admin")]
@@ -628,7 +644,35 @@ namespace WebApp.Controllers
 				return Json(new { successful = false, message = "خطا رخ داده است!" });
 			}
 		}
-		
+		[HttpPost]
+		[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> UpdateUserRole([FromBody] UpdateUserRoleViewModel updateUserRoleViewModel)
+		{
+			if (!ModelState.IsValid)
+			{
+				string errorMsg = "";
+
+				foreach (var state in ModelState)
+				{
+					foreach (var error in state.Value.Errors)
+					{
+						errorMsg += error.ErrorMessage;
+					}
+				}
+
+				return Json(new { successful = false, message = errorMsg });
+			}
+
+			var result = await UserManagement.UpdateUserRole(updateUserRoleViewModel.UserId, updateUserRoleViewModel.UserRoleIdList);
+
+			if (result.IsSuccessful)
+			{
+				return Json(new { successful = true });
+			}
+
+			return Json(new { successful = false, message = result.Message });
+		}
+	
 		#endregion
 	}
 }

@@ -68,20 +68,14 @@ namespace BLL.Management
 				// یک موجودیت پست جدید از ViewModel ایجاد کنید.
 				var post = new Post()
 				{
-					Author = await UserRepository.GetByIdAsync(postViewModel.AuthorId.Value),
+                    AuthorId = postViewModel.AuthorId,
 					CreatedAt = DateTime.Now,
 					AbstractContent = postViewModel.AbstractContent,
 					HtmlContent = postViewModel.HtmlContent,
 					Title = postViewModel.Title,
-					Tags = await TagRepository.GetAllByIdList(postViewModel.TagIdList)
+					Tags = await TagRepository.GetAllByIdList(postViewModel.TagIdList),
+					CategoryId = postViewModel.CategoryId
 				};
-
-				// Assign category if provided.
-				// اگر دسته‌بندی مشخص شده باشد، اختصاص داده شود.
-				if (postViewModel.CategoryId.HasValue)
-				{
-					post.Category = await CategoryRepository.GetByIdAsync(postViewModel.CategoryId.Value);
-				}
 
 				// Add the post to the repository.
 				// پست را به مخزن اضافه کنید.

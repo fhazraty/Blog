@@ -69,10 +69,13 @@ namespace WebApp.Controllers
 		}
 
 
+		public IActionResult SpecialConfiguration()
+		{
+			return View();
+		}
 
 
-
-		[HttpPost]
+        [HttpPost]
 		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> UpdateEditUser([FromBody] EditUserViewModel userViewModel)
 		{

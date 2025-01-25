@@ -1,9 +1,7 @@
-﻿using BLL.Management;
-using DAL.EF.Repository;
-using DAL.EF;
+﻿using BLL.Model;
+using BLL.Management;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using BLL.Model;
 using WebApp.ViewModel;
 
 namespace WebApp.Controllers
@@ -15,13 +13,21 @@ namespace WebApp.Controllers
 		public ICategoryManagement CategoryManagement { get; set; }
 		public IUploadedFileManagement UploadedFileManagement { get; set; }
 		public IUserManagement UserManagement { get; set; }
-		public AdminController(IPostManagement postManagement, ITagManagement tagManagement, ICategoryManagement categoryManagement, IUploadedFileManagement uploadedFileManagement, IUserManagement userManagement)
+		public ISpecialConfigurationManagement SpecialConfigurationManagement { get; set; }
+		public AdminController(
+			IPostManagement postManagement, 
+			ITagManagement tagManagement, 
+			ICategoryManagement categoryManagement, 
+			IUploadedFileManagement uploadedFileManagement, 
+			IUserManagement userManagement,
+			ISpecialConfigurationManagement specialConfigurationManagement)
 		{
 			this.PostManagement = postManagement;
 			this.TagManagement = tagManagement;
 			this.CategoryManagement = categoryManagement;
 			this.UploadedFileManagement = uploadedFileManagement;
 			this.UserManagement = userManagement;
+			this.SpecialConfigurationManagement = specialConfigurationManagement;
 		}
 		[Authorize(Roles = "Admin")]
 		public IActionResult Index()
@@ -29,6 +35,49 @@ namespace WebApp.Controllers
 			return View();
 		}
 
+
+		#region SpecialConfiguration
+		[HttpGet]
+		[Authorize(Roles = "Admin")]
+		public IActionResult SpecialConfiguration()
+		{
+			return View();
+		}
+		[HttpPost]
+		[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> UpdateSpecialConfiguration([FromBody] WebApp.ViewModel.SpecialConfigurationViewModel configViewModel)
+		{
+			var result = await SpecialConfigurationManagement.UpdateConfig(new BLL.Model.SpecialConfigurationViewModel()
+			{
+				Id = configViewModel.Id,
+				Name = configViewModel.Name,
+				Value = configViewModel.Value
+			});
+
+			if (result.IsSuccessful)
+			{
+				return Json(new { successful = true });
+			}
+
+			return Json(new { successful = false, message = result.Message });
+		}
+
+		[HttpGet]
+		[AllowAnonymous]
+		public async Task<IActionResult> GetSpecialConfigurationById(int id)
+		{
+			var config = await SpecialConfigurationManagement.GetConfigById(id);
+
+			if (config == null || !config.IsSuccessful)
+			{
+				return Json(new { successful = false, message = "تنظیم یافت نشد!" });
+			}
+
+			return Json(new { successful = true, config = config.Entity });
+		}
+
+		#endregion
+		#region User
 		[HttpGet]
 		[Authorize(Roles = "Admin")]
 		public IActionResult ListUsers()
@@ -67,15 +116,7 @@ namespace WebApp.Controllers
 
 			return View();
 		}
-
-
-		public IActionResult SpecialConfiguration()
-		{
-			return View();
-		}
-
-
-        [HttpPost]
+		[HttpPost]
 		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> UpdateEditUser([FromBody] EditUserViewModel userViewModel)
 		{
@@ -158,6 +199,34 @@ namespace WebApp.Controllers
 				return Json(new { successful = false, message = "خطا رخ داده است!" });
 			}
 		}
+		[HttpPost]
+		[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> UpdateUserRole([FromBody] UpdateUserRoleViewModel updateUserRoleViewModel)
+		{
+			if (!ModelState.IsValid)
+			{
+				string errorMsg = "";
+
+				foreach (var state in ModelState)
+				{
+					foreach (var error in state.Value.Errors)
+					{
+						errorMsg += error.ErrorMessage;
+					}
+				}
+
+				return Json(new { successful = false, message = errorMsg });
+			}
+
+			var result = await UserManagement.UpdateUserRole(updateUserRoleViewModel.UserId, updateUserRoleViewModel.UserRoleIdList);
+
+			if (result.IsSuccessful)
+			{
+				return Json(new { successful = true });
+			}
+
+			return Json(new { successful = false, message = result.Message });
+		}
 		[HttpGet]
 		[Authorize(Roles = "Admin")]
 		public IActionResult ListRoles()
@@ -172,13 +241,15 @@ namespace WebApp.Controllers
 
 			return Json(new { successful = true, roles = roles.ToList() });
 		}
+		#endregion
+		#region Menu
 		[HttpGet]
 		[Authorize(Roles = "Admin")]
 		public IActionResult ListMenu()
 		{
 			return View();
 		}
-		
+		#endregion
 		#region Posts
 		[HttpGet]
 		[Authorize(Roles = "Admin")]
@@ -647,35 +718,6 @@ namespace WebApp.Controllers
 				return Json(new { successful = false, message = "خطا رخ داده است!" });
 			}
 		}
-		[HttpPost]
-		[Authorize(Roles = "Admin")]
-		public async Task<IActionResult> UpdateUserRole([FromBody] UpdateUserRoleViewModel updateUserRoleViewModel)
-		{
-			if (!ModelState.IsValid)
-			{
-				string errorMsg = "";
-
-				foreach (var state in ModelState)
-				{
-					foreach (var error in state.Value.Errors)
-					{
-						errorMsg += error.ErrorMessage;
-					}
-				}
-
-				return Json(new { successful = false, message = errorMsg });
-			}
-
-			var result = await UserManagement.UpdateUserRole(updateUserRoleViewModel.UserId, updateUserRoleViewModel.UserRoleIdList);
-
-			if (result.IsSuccessful)
-			{
-				return Json(new { successful = true });
-			}
-
-			return Json(new { successful = false, message = result.Message });
-		}
-	
-		#endregion
+    	#endregion
 	}
 }

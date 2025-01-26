@@ -38,6 +38,15 @@ namespace DAL.EF.Repository
 				.FirstOrDefaultAsync(u => u.Username == username);
 		}
 
+		public async Task<User?> GetByIdAsync(int id)
+		{
+			return 
+				_dbSet
+				.Include(u => u.Roles)
+				.FirstOrDefault(u => u.Id == id);
+		}
+
+
 		/// <summary>
 		/// Retrieves the total count of users in the database asynchronously.
 		/// تعداد کل کاربران را به صورت غیرهمزمان از پایگاه داده بازیابی می‌کند.

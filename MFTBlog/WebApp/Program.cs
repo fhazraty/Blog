@@ -24,6 +24,7 @@ builder.Services.AddScoped<IPostManagement, PostManagement>();
 builder.Services.AddScoped<ITagManagement, TagManagement>();
 builder.Services.AddScoped<IUploadedFileManagement, UploadedFileManagement>();
 builder.Services.AddScoped<IUserManagement, UserManagement>();
+builder.Services.AddScoped<ISpecialConfigurationManagement, SpecialConfigurationManagement>();
 
 //Repository
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -34,6 +35,7 @@ builder.Services.AddScoped<ISpecialConfigurationRepository, SpecialConfiguration
 builder.Services.AddScoped<ITagRepository, TagRepository>();
 builder.Services.AddScoped<IUploadedFileRepository, UploadedFileRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ISpecialConfigurationRepository, SpecialConfigurationRepository>();
 
 builder
     .Services

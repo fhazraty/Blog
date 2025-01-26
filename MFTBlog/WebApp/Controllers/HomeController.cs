@@ -16,34 +16,52 @@ namespace WebApp.Controllers
 		public IPostManagement PostManagement { get; set; }
 		public ITagManagement TagManagement { get; set; }
 		public ICategoryManagement CategoryManagement { get; set; }
+		public ISpecialConfigurationManagement SpecialConfigurationManagement { get; set; }
 		public HomeController(ILogger<HomeController> logger,
 			IPostManagement postManagement,
 			ITagManagement tagManagement,
-			ICategoryManagement categoryManagement)
+			ICategoryManagement categoryManagement,
+			ISpecialConfigurationManagement specialConfigurationManagement)
 		{
             this._logger = logger;
 			this.PostManagement = postManagement;
 			this.TagManagement = tagManagement;
 			this.CategoryManagement = categoryManagement;
+			this.SpecialConfigurationManagement = specialConfigurationManagement;
         }
-
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
+			ViewBag.Pic1 = (await SpecialConfigurationManagement.GetConfigById(1)).Entity.Value;
+			ViewBag.Pic2 = (await SpecialConfigurationManagement.GetConfigById(2)).Entity.Value;
+			ViewBag.Pic3 = (await SpecialConfigurationManagement.GetConfigById(3)).Entity.Value;
 
-            return View();
+			ViewBag.BlogTitle = (await SpecialConfigurationManagement.GetConfigById(4)).Entity.Value;
+			ViewBag.BlogMainHeader = (await SpecialConfigurationManagement.GetConfigById(5)).Entity.Value;
+			ViewBag.BlogMainHeaderText = (await SpecialConfigurationManagement.GetConfigById(6)).Entity.Value;
+
+			ViewBag.Pic1Title = (await SpecialConfigurationManagement.GetConfigById(7)).Entity.Value;
+			ViewBag.Pic2Title = (await SpecialConfigurationManagement.GetConfigById(8)).Entity.Value;
+			ViewBag.Pic3Title = (await SpecialConfigurationManagement.GetConfigById(9)).Entity.Value;
+
+			ViewBag.Pic1TitleDesc = (await SpecialConfigurationManagement.GetConfigById(10)).Entity.Value;
+			ViewBag.Pic2TitleDesc = (await SpecialConfigurationManagement.GetConfigById(11)).Entity.Value;
+			ViewBag.Pic3TitleDesc = (await SpecialConfigurationManagement.GetConfigById(12)).Entity.Value;
+
+			ViewBag.Pic1Link = (await SpecialConfigurationManagement.GetConfigById(13)).Entity.Value;
+			ViewBag.Pic2Link = (await SpecialConfigurationManagement.GetConfigById(14)).Entity.Value;
+			ViewBag.Pic3Link = (await SpecialConfigurationManagement.GetConfigById(15)).Entity.Value;
+
+			return View();
         }
-
         public IActionResult Privacy()
         {
             return View();
         }
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
 		[Route("Posts")]
 		[AllowAnonymous]
 		public async Task<IActionResult> PostsAsync(int page = 1, int perPage = 10)
@@ -84,7 +102,6 @@ namespace WebApp.Controllers
 			// ارسال مدل به ویو
 			return View(model);
 		}
-
 		[AllowAnonymous]
 		public async Task<IActionResult> ListPostsData(int page, int perpage)
 		{
@@ -125,7 +142,5 @@ namespace WebApp.Controllers
 
 			return View(model);
 		}
-
-
 	}
 }

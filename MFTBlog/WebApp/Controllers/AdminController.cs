@@ -62,19 +62,7 @@ namespace WebApp.Controllers
 			return Json(new { successful = false, message = result.Message });
 		}
 
-		[HttpGet]
-		[AllowAnonymous]
-		public async Task<IActionResult> GetSpecialConfigurationById(int id)
-		{
-			var config = await SpecialConfigurationManagement.GetConfigById(id);
-
-			if (config == null || !config.IsSuccessful)
-			{
-				return Json(new { successful = false, message = "تنظیم یافت نشد!" });
-			}
-
-			return Json(new { successful = true, config = config.Entity });
-		}
+		
 
 		#endregion
 		#region User

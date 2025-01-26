@@ -5,8 +5,8 @@
 <!-- Hero Section -->
 <section class="bg-light py-5 text-center">
     <div class="container">
-        <h2>به وبلاگ من خوش آمدید</h2>
-        <p class="text-muted">محلی برای اشتراک افکار، ایده ها و داستانها.</p>
+        <h2>@ViewBag.BlogMainHeader</h2>
+        <p class="text-muted">@ViewBag.BlogMainHeaderText</p>
     </div>
 </section>
 
@@ -16,33 +16,33 @@
         <!-- Post 1 -->
         <div class="col-md-4">
             <div class="card mb-4">
-                <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Post 1">
+                <img src="@ViewBag.Pic1" class="card-img-top" alt="Post 1">
                 <div class="card-body">
-                    <h5 class="card-title">Post Title 1</h5>
-                    <p class="card-text text-muted">This is a short description of the post.</p>
-                    <a href="#" class="btn btn-primary">Read More</a>
+                    <h5 class="card-title">@ViewBag.Pic1Title</h5>
+                    <p class="card-text text-muted">@ViewBag.Pic1TitleDesc</p>
+                    <a href="@ViewBag.Pic1Link" class="btn btn-primary">ادامه</a>
                 </div>
             </div>
         </div>
         <!-- Post 2 -->
         <div class="col-md-4">
             <div class="card mb-4">
-                <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Post 2">
+                <img src="@ViewBag.Pic2" class="card-img-top" alt="Post 2">
                 <div class="card-body">
-                    <h5 class="card-title">Post Title 2</h5>
-                    <p class="card-text text-muted">This is a short description of the post.</p>
-                    <a href="#" class="btn btn-primary">Read More</a>
+                    <h5 class="card-title">@ViewBag.Pic2Title</h5>
+                    <p class="card-text text-muted">@ViewBag.Pic2TitleDesc</p>
+                    <a href="@ViewBag.Pic2Link" class="btn btn-primary">ادامه</a>
                 </div>
             </div>
         </div>
         <!-- Post 3 -->
         <div class="col-md-4">
             <div class="card mb-4">
-                <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Post 3">
+                <img src="@ViewBag.Pic3" class="card-img-top" alt="Post 3">
                 <div class="card-body">
-                    <h5 class="card-title">Post Title 3</h5>
-                    <p class="card-text text-muted">This is a short description of the post.</p>
-                    <a href="#" class="btn btn-primary">Read More</a>
+                    <h5 class="card-title">@ViewBag.Pic3Title</h5>
+                    <p class="card-text text-muted">@ViewBag.Pic3TitleDesc</p>
+                    <a href="@ViewBag.Pic3Link" class="btn btn-primary">ادامه</a>
                 </div>
             </div>
         </div>

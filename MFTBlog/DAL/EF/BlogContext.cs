@@ -143,6 +143,24 @@ namespace DAL.EF
 			modelBuilder.Entity<SpecialConfiguration>()
 				.HasKey(sc => sc.Id);
 
+			modelBuilder.Entity<SpecialConfiguration>().HasData(
+				new SpecialConfiguration { Id = 1, Name = "تصویر صفحه اول شماره 1", Value = "../../Writer/ViewFile?id=3" },
+				new SpecialConfiguration { Id = 2, Name = "تصویر صفحه اول شماره 2", Value = "../../Writer/ViewFile?id=4" },
+				new SpecialConfiguration { Id = 3, Name = "تصویر صفحه اول شماره 3", Value = "../../Writer/ViewFile?id=5" },
+				new SpecialConfiguration { Id = 4, Name = "اسم وبلاگ", Value = "وبلاگ من" },
+				new SpecialConfiguration { Id = 5, Name = "متن وسط بالا", Value = "به وبلاگ من خوش آمدید" },
+				new SpecialConfiguration { Id = 6, Name = "توضیحات متن وسط بالا زیر نوشته", Value = "محلی برای اشتراک افکار، ایده ها و داستانها." },
+				new SpecialConfiguration { Id = 7, Name = "عنوان تصویر 1", Value = "عنوان تصویر 1" },
+				new SpecialConfiguration { Id = 8, Name = "عنوان تصویر 2", Value = "عنوان تصویر 2" },
+				new SpecialConfiguration { Id = 9, Name = "عنوان تصویر 3", Value = "عنوان تصویر 3" },
+				new SpecialConfiguration { Id = 10, Name = "توضیح تصویر 1", Value = "توضیح تصویر 1" },
+				new SpecialConfiguration { Id = 11, Name = "توضیح تصویر 2", Value = "توضیح تصویر 2" },
+				new SpecialConfiguration { Id = 12, Name = "توضیح تصویر 3", Value = "توضیح تصویر 3" },
+				new SpecialConfiguration { Id = 13, Name = "لینک تصویر1", Value = "#" },
+				new SpecialConfiguration { Id = 14, Name = "لینک تصویر2", Value = "#" },
+				new SpecialConfiguration { Id = 15, Name = "لینک تصویر3", Value = "#" }
+			); 
+
 			base.OnModelCreating(modelBuilder);
 		}
 	}

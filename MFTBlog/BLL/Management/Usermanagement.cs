@@ -16,13 +16,11 @@ namespace BLL.Management
 		/// مخزن کاربران.
 		/// </summary>
 		public IUserRepository UserRepository { get; set; }
-
 		/// <summary>
 		/// Gets or sets the role repository.
 		/// مخزن نقش‌ها.
 		/// </summary>
 		public IRoleRepository RoleRepository { get; set; }
-
 		/// <summary>
 		/// Initializes a new instance of the <see cref="UserManagement"/> class.
 		/// یک نمونه جدید از کلاس UserManagement را مقداردهی می‌کند.
@@ -34,7 +32,6 @@ namespace BLL.Management
 			UserRepository = userRepository;
 			RoleRepository = roleRepository;
 		}
-
 		/// <summary>
 		/// Adds a new user with the provided details.
 		/// یک کاربر جدید را با جزئیات ارائه شده اضافه می‌کند.
@@ -104,7 +101,6 @@ namespace BLL.Management
 				};
 			}
 		}
-
 		/// <summary>
 		/// Finds a user by their username and password.
 		/// یک کاربر را بر اساس نام کاربری و رمز عبور پیدا می‌کند.
@@ -171,7 +167,6 @@ namespace BLL.Management
 				};
 			}
 		}
-
 		/// <summary>
 		/// Retrieves a paginated list of users and the total count.
 		/// یک لیست صفحه‌بندی‌شده از کاربران و تعداد کل آن‌ها را بازیابی می‌کند.
@@ -204,7 +199,6 @@ namespace BLL.Management
 				RowIndex = ((page - 1) * perPage) + index + 1
 			}).ToList(), pageCount);
 		}
-
 		/// <summary>
 		/// Deletes a user by their ID.
 		/// یک کاربر را بر اساس شناسه حذف می‌کند.
@@ -484,10 +478,5 @@ namespace BLL.Management
 				};
 			}
 		}
-
-
-
-
-
 	}
 }

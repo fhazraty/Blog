@@ -166,19 +166,19 @@ namespace DAL.Migrations
                         {
                             Id = 1,
                             Name = "تصویر صفحه اول شماره 1",
-                            Value = "../../Writer/ViewFile?id=3"
+                            Value = "../../Writer/ViewFile?id=1"
                         },
                         new
                         {
                             Id = 2,
                             Name = "تصویر صفحه اول شماره 2",
-                            Value = "../../Writer/ViewFile?id=4"
+                            Value = "../../Writer/ViewFile?id=2"
                         },
                         new
                         {
                             Id = 3,
                             Name = "تصویر صفحه اول شماره 3",
-                            Value = "../../Writer/ViewFile?id=5"
+                            Value = "../../Writer/ViewFile?id=3"
                         },
                         new
                         {

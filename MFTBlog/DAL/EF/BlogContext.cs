@@ -144,9 +144,9 @@ namespace DAL.EF
 				.HasKey(sc => sc.Id);
 
 			modelBuilder.Entity<SpecialConfiguration>().HasData(
-				new SpecialConfiguration { Id = 1, Name = "تصویر صفحه اول شماره 1", Value = "../../Writer/ViewFile?id=3" },
-				new SpecialConfiguration { Id = 2, Name = "تصویر صفحه اول شماره 2", Value = "../../Writer/ViewFile?id=4" },
-				new SpecialConfiguration { Id = 3, Name = "تصویر صفحه اول شماره 3", Value = "../../Writer/ViewFile?id=5" },
+				new SpecialConfiguration { Id = 1, Name = "تصویر صفحه اول شماره 1", Value = "../../Writer/ViewFile?id=1" },
+				new SpecialConfiguration { Id = 2, Name = "تصویر صفحه اول شماره 2", Value = "../../Writer/ViewFile?id=2" },
+				new SpecialConfiguration { Id = 3, Name = "تصویر صفحه اول شماره 3", Value = "../../Writer/ViewFile?id=3" },
 				new SpecialConfiguration { Id = 4, Name = "اسم وبلاگ", Value = "وبلاگ من" },
 				new SpecialConfiguration { Id = 5, Name = "متن وسط بالا", Value = "به وبلاگ من خوش آمدید" },
 				new SpecialConfiguration { Id = 6, Name = "توضیحات متن وسط بالا زیر نوشته", Value = "محلی برای اشتراک افکار، ایده ها و داستانها." },

@@ -19,8 +19,6 @@
         <script src="~/lib/kendo/js/kendo.all.min.js"></script>
         <script>
         $(document).ready(function () {
-            
-
             // بارگذاری تنظیمات
             loadConfigurations();
 
@@ -66,44 +64,51 @@
                 adjustSidebarHeight();
             }
 
-            $('#saveAllButton').on('click', function () {
-                let updatedConfigurations = [];
-                let isValid = true;
+                    $('#saveAllButton').on('click', function () {
+            let isValid = true;
 
-                $('.config-name, .config-value').each(function () {
-                    const id = $(this).data('id');
-                    const name = $(`#row-${id} .config-name`).val();
-                    const value = $(`#row-${id} .config-value`).val();
+            // جمع‌آوری تنظیمات
+            $('.config-name, .config-value').each(function () {
+                const id = $(this).data('id');
+                const name = $(`#row-${id} .config-name`).val();
+                const value = $(`#row-${id} .config-value`).val();
 
-                    if (!name || !value) {
-                        isValid = false;
-                        alert('نام و مقدار نمی‌توانند خالی باشند.');
-                        return false;
-                    }
+                if (!name || !value) {
+                    isValid = false;
+                    alert('نام و مقدار نمی‌توانند خالی باشند.');
+                    return false;
+                }
 
-                    updatedConfigurations.push({ id: id, name: name, value: value });
-                });
-
-                if (!isValid) return;
+                // ارسال هر تنظیم به صورت جداگانه
+                const config = { id: id, name: name, value: value };
 
                 $.ajax({
-                    url: '/SpecialConfiguration/UpdateAll',
+                    url: '/Admin/UpdateSpecialConfiguration',
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify(updatedConfigurations),
+                    data: JSON.stringify(config),
                     success: function (response) {
                         if (response.successful) {
-                            alert('تنظیمات با موفقیت ذخیره شد');
+                            console.log(`تنظیم با شناسه ${id} با موفقیت ذخیره شد.`);
                         } else {
-                            alert('خطا در ذخیره تنظیمات');
+                            alert(`خطا در ذخیره تنظیم با شناسه ${id}: ${response.message}`);
                         }
                     },
                     error: function () {
-                        alert('خطا در ذخیره تنظیمات');
+                        alert(`خطا در ذخیره تنظیم با شناسه ${id}.`);
                     }
                 });
             });
-        });
 
-        </script>
+            if (!isValid) {
+                return;
+            }
+
+            alert('تمام تنظیمات ارسال شدند.');
+        });
+        
+    });
+    
+                        
+                            </script>
 }

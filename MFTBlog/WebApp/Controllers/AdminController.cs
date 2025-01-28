@@ -39,7 +39,7 @@ namespace WebApp.Controllers
 		#region SpecialConfiguration
 		[HttpGet]
 		[Authorize(Roles = "Admin")]
-		public IActionResult SpecialConfiguration()
+		public IActionResult ListSpecialConfiguration()
 		{
 			return View();
 		}
@@ -61,12 +61,18 @@ namespace WebApp.Controllers
 
 			return Json(new { successful = false, message = result.Message });
 		}
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ListSpecialConfigurationData()
+        {
+            var configurations = await SpecialConfigurationManagement.ListAllSpecialConfigurations();
+            return Json(new { successful = true, configurations });
+        }
 
-		
 
-		#endregion
-		#region User
-		[HttpGet]
+        #endregion
+        #region User
+        [HttpGet]
 		[Authorize(Roles = "Admin")]
 		public IActionResult ListUsers()
 		{

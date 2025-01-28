@@ -7,5 +7,6 @@ namespace BLL.Management
     {
         Task<ResultViewModel> UpdateConfig(SpecialConfigurationViewModel specialConfigurationViewModel);
         Task<ResultEntityViewModel<SpecialConfiguration>> GetConfigById(int id);
-	}
+        Task<List<SpecialConfigurationViewModel>> ListAllSpecialConfigurations();
+    }
 }

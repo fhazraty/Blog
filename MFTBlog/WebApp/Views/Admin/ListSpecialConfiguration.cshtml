@@ -1,0 +1,109 @@
+﻿@{
+    ViewData["Title"] = "ویرایش تنظیمات خاص";
+    Layout = "/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="mt-4 content">
+    <div class="container mt-3">
+        <h3>ویرایش تنظیمات خاص</h3>
+        <div id="configurationsList">
+            <!-- جدول تنظیمات در اینجا بارگذاری می‌شود -->
+        </div>
+        <div class="d-flex justify-content-end mt-3">
+            <button id="saveAllButton" class="btn btn-success">ذخیره تغییرات</button>
+        </div>
+    </div>
+</div>
+
+@section BottomJS {
+        <script src="~/lib/kendo/js/kendo.all.min.js"></script>
+        <script>
+        $(document).ready(function () {
+            
+
+            // بارگذاری تنظیمات
+            loadConfigurations();
+
+            function loadConfigurations() {
+                $('#configurationsList').html('<div class="text-center">در حال بارگذاری...</div>');
+                $.ajax({
+                    url: '/Admin/ListSpecialConfigurationData',
+                    type: 'GET',
+                    success: function (response) {
+                        if (response.successful) {
+                            renderConfigurations(response.configurations);
+                        } else {
+                            alert(response.message || 'خطا در بارگذاری تنظیمات خاص');
+                        }
+                    },
+                    error: function () {
+                        alert('خطا در بارگذاری تنظیمات خاص');
+                    }
+                });
+            }
+
+            function renderConfigurations(data) {
+                let tableHtml = `
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>شناسه</th>
+                                <th>نام</th>
+                                <th>مقدار</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+                data.forEach(item => {
+                    tableHtml += `
+                        <tr id="row-${item.id}">
+                            <td>${item.id}</td>
+                            <td><input type="text" class="form-control config-name" value="${item.name}" data-id="${item.id}"></td>
+                            <td><input type="text" class="form-control config-value" value="${item.value}" data-id="${item.id}"></td>
+                        </tr>`;
+                });
+                tableHtml += `</tbody></table>`;
+                $('#configurationsList').html(tableHtml);
+                adjustSidebarHeight();
+            }
+
+            $('#saveAllButton').on('click', function () {
+                let updatedConfigurations = [];
+                let isValid = true;
+
+                $('.config-name, .config-value').each(function () {
+                    const id = $(this).data('id');
+                    const name = $(`#row-${id} .config-name`).val();
+                    const value = $(`#row-${id} .config-value`).val();
+
+                    if (!name || !value) {
+                        isValid = false;
+                        alert('نام و مقدار نمی‌توانند خالی باشند.');
+                        return false;
+                    }
+
+                    updatedConfigurations.push({ id: id, name: name, value: value });
+                });
+
+                if (!isValid) return;
+
+                $.ajax({
+                    url: '/SpecialConfiguration/UpdateAll',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(updatedConfigurations),
+                    success: function (response) {
+                        if (response.successful) {
+                            alert('تنظیمات با موفقیت ذخیره شد');
+                        } else {
+                            alert('خطا در ذخیره تنظیمات');
+                        }
+                    },
+                    error: function () {
+                        alert('خطا در ذخیره تنظیمات');
+                    }
+                });
+            });
+        });
+
+        </script>
+}

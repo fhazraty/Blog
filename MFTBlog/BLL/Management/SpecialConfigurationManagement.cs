@@ -80,6 +80,18 @@ namespace BLL.Management
 				};
 			}
 		}
+        public async Task<List<SpecialConfigurationViewModel>> ListAllSpecialConfigurations()
+        {
+            var configs = await SpecialConfigurationRepository.GetAllAsync();
 
+            var configViewModels = configs.Select(config => new SpecialConfigurationViewModel
+            {
+                Id = config.Id,
+                Name = config.Name,
+                Value = config.Value
+            }).ToList();
+
+            return configViewModels;
+        }
     }
 }

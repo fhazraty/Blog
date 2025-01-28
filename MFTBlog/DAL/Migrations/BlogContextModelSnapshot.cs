@@ -360,6 +360,47 @@ namespace DAL.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BirthDate = new DateTime(1990, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "ادمین",
+                            LastName = "ادمین",
+                            NationalCode = "1234567890",
+                            PasswordCreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PasswordHash = "5fdf8fa7bf2a50747cb60d871a29cb9e0f6c3d60f34b94f2b4af3b41ee9a3fa2b3c68f30ec57a67e65d8b995b1366847cd5bb9246c788b4ae94db637660cc4d9",
+                            PasswordUpdatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Salt = "c6173eda-beb4-4d4a-a719-b80e38ba3f06",
+                            Username = "admin"
+                        });
+                });
+
+            modelBuilder.Entity("DAL.EF.Model.UserRole", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("UserRole");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1,
+                            RoleId = 2,
+                            Id = 0
+                        });
                 });
 
             modelBuilder.Entity("PostTag", b =>
@@ -375,21 +416,6 @@ namespace DAL.Migrations
                     b.HasIndex("TagsId");
 
                     b.ToTable("PostTag");
-                });
-
-            modelBuilder.Entity("RoleUser", b =>
-                {
-                    b.Property<int>("RolesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("RolesId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("RoleUser");
                 });
 
             modelBuilder.Entity("DAL.EF.Model.Category", b =>
@@ -427,6 +453,25 @@ namespace DAL.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("DAL.EF.Model.UserRole", b =>
+                {
+                    b.HasOne("DAL.EF.Model.Role", "Role")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.EF.Model.User", "User")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("PostTag", b =>
                 {
                     b.HasOne("DAL.EF.Model.Post", null)
@@ -438,21 +483,6 @@ namespace DAL.Migrations
                     b.HasOne("DAL.EF.Model.Tag", null)
                         .WithMany()
                         .HasForeignKey("TagsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("RoleUser", b =>
-                {
-                    b.HasOne("DAL.EF.Model.Role", null)
-                        .WithMany()
-                        .HasForeignKey("RolesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DAL.EF.Model.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -469,9 +499,16 @@ namespace DAL.Migrations
                     b.Navigation("SubMenus");
                 });
 
+            modelBuilder.Entity("DAL.EF.Model.Role", b =>
+                {
+                    b.Navigation("UserRoles");
+                });
+
             modelBuilder.Entity("DAL.EF.Model.User", b =>
                 {
                     b.Navigation("Posts");
+
+                    b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
         }

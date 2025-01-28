@@ -34,15 +34,17 @@ namespace DAL.EF.Repository
 				._dbSet
 				.AsQueryable()
 			    .AsNoTracking()
-				.Include(u => u.Roles) // Includes related roles. / شامل نقش‌های مرتبط.
-				.FirstOrDefaultAsync(u => u.Username == username);
+                .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role) // Includes related roles. / شامل نقش‌های مرتبط.
+                .FirstOrDefaultAsync(u => u.Username == username);
 		}
 
 		public async Task<User?> GetByIdAsync(int id)
 		{
 			return 
 				_dbSet
-				.Include(u => u.Roles)
+				.Include(u => u.UserRoles)
+				.ThenInclude(ur => ur.Role)
 				.FirstOrDefault(u => u.Id == id);
 		}
 
@@ -83,8 +85,9 @@ namespace DAL.EF.Repository
 				this._dbSet
 				.AsQueryable()
 				.AsNoTracking()
-				.Include(u => u.Roles) // Includes related roles. / شامل نقش‌های مرتبط.
-				.Skip((page - 1) * perPage) // Skips users for previous pages. / کاربران صفحات قبلی را نادیده می‌گیرد.
+                .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role) // Includes related roles. / شامل نقش‌های مرتبط.
+                .Skip((page - 1) * perPage) // Skips users for previous pages. / کاربران صفحات قبلی را نادیده می‌گیرد.
 				.Take(perPage) // Takes the number of users for the current page. / تعداد کاربران صفحه جاری را برمی‌دارد.
 				.ToListAsync();
 		}

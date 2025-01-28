@@ -75,16 +75,16 @@ namespace DAL.EF.Model
 		/// </summary>
 		public DateTime PasswordUpdatedAt { get; set; }
 
-		/// <summary>
-		/// Gets or sets the roles associated with the user.
-		/// نقش‌های مرتبط با کاربر.
-		/// </summary>
-		public ICollection<Role> Roles { get; set; } = new List<Role>();
+        /// <summary>
+        /// Gets or sets the roles associated with the user.
+        /// نقش‌های مرتبط با کاربر.
+        /// </summary>
+        public ICollection<UserRole> UserRoles { get; set; }
 
-		/// <summary>
-		/// Gets or sets the posts authored by the user.
-		/// پست‌هایی که توسط کاربر نوشته شده‌اند.
-		/// </summary>
-		public ICollection<Post> Posts { get; set; } = new List<Post>();
+        /// <summary>
+        /// Gets or sets the posts authored by the user.
+        /// پست‌هایی که توسط کاربر نوشته شده‌اند.
+        /// </summary>
+        public ICollection<Post> Posts { get; set; } = new List<Post>();
 	}
 }

@@ -30,14 +30,14 @@ namespace DAL.EF.Model
 		[Required, MaxLength(50)]
 		public string Name { get; set; }
 
-		/// <summary>
-		/// Gets or sets the collection of users associated with this role.
-		/// مجموعه‌ای از کاربران مرتبط با این نقش را تنظیم یا بازیابی می‌کند.
-		/// </summary>
-		/// <value>
-		/// The collection of users associated with this role.
-		/// مجموعه کاربران مرتبط با این نقش.
-		/// </value>
-		public ICollection<User> Users { get; set; } = new List<User>();
-	}
+        /// <summary>
+        /// Gets or sets the collection of users associated with this role.
+        /// مجموعه‌ای از کاربران مرتبط با این نقش را تنظیم یا بازیابی می‌کند.
+        /// </summary>
+        /// <value>
+        /// The collection of users associated with this role.
+        /// مجموعه کاربران مرتبط با این نقش.
+        /// </value>
+        public ICollection<UserRole> UserRoles { get; set; }
+    }
 }

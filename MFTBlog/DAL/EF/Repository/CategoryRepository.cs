@@ -31,7 +31,6 @@ namespace DAL.EF.Repository
 		public async Task<Category?> GetByIdAsync(int id)
 		{
 			return await _dbSet
-				.AsNoTracking()
 				.Include(c => c.Posts) // Includes related posts. / شامل پست‌های مرتبط.
 				.Include(c => c.SubCategories) // Includes related subcategories. / شامل زیرمجموعه‌های مرتبط.
 				.FirstOrDefaultAsync(c => c.Id == id);

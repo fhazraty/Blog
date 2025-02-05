@@ -1,15 +1,15 @@
 
-# Blog Application
+# Store Application
 
-This repository is a sample weblog application developed using ASP.NET Core 9.0 and Entity Framework (EF) Core 9.0.
+This repository is a sample store application developed using ASP.NET Core 9.0 and Entity Framework (EF) Core 9.0.
 
 ## Overview
 
-The project demonstrates how to build a modern weblog application using ASP.NET Core for the backend and EF Core for database operations. ASP.NET Core provides high performance and cross-platform capabilities, while EF Core allows seamless interaction with the database through .NET objects.
+The project demonstrates how to build a modern store application using ASP.NET Core for the backend and EF Core for database operations. ASP.NET Core provides high performance and cross-platform capabilities, while EF Core allows seamless interaction with the database through .NET objects.
 
 ## Features
 
-- Post management: Create, edit, and delete blog posts.
+- Post management: Create, edit, and delete store posts.
 - User authentication and authorization.
 - Responsive design for web accessibility.
 - Open-source and extendable for learning and contributions.
@@ -104,7 +104,7 @@ Contributions are welcome! Please fork the repository and submit a pull request 
    ```bash
    dotnet restore
    ```
-4. مهاجرت‌های پایگاه‌داده را به‌روزرسانی کنید. دقت کنید که Connectionstring در فایل BlogContext.cs باید به پایگاه داده شما اشاره کند. 
+4. مهاجرت‌های پایگاه‌داده را به‌روزرسانی کنید. دقت کنید که Connectionstring در فایل CMSContext.cs باید به پایگاه داده شما اشاره کند. 
    ```bash
    dotnet ef database update
    ```

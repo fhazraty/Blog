@@ -1,17 +1,17 @@
-using BLL.Management;
-using DAL.EF.Repository;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using DAL.EF;
+using DAL.CMS.EF;
+using DAL.CMS.EF.Repository;
+using BLL.CMS.Management;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Add BlogContext as a database context
-builder.Services.AddDbContext<BlogContext>(options =>
+// Add CMSContext as a database context
+builder.Services.AddDbContext<CMSContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 //builder.Services.AddDbContext<DbContext>(options =>

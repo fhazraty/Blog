@@ -1,16 +1,16 @@
 using System.Diagnostics;
-using BLL.Management;
-using DAL.EF.Repository;
-using DAL.EF;
+using DAL.CMS.EF.Repository;
+using DAL.CMS.EF;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.ViewModel;
 using Microsoft.EntityFrameworkCore;
-using BLL.Model;
+using BLL.CMS.Model;
+using BLL.CMS.Management;
 
 namespace WebApp.Controllers
 {
-    public class HomeController : BaseController
+	public class HomeController : BaseController
 	{
         private readonly ILogger<HomeController> _logger;
 		public IPostManagement PostManagement { get; set; }
@@ -35,9 +35,9 @@ namespace WebApp.Controllers
 			ViewBag.Pic2 = (await SpecialConfigurationManagement.GetConfigById(2)).Entity.Value;
 			ViewBag.Pic3 = (await SpecialConfigurationManagement.GetConfigById(3)).Entity.Value;
 
-			ViewBag.BlogTitle = (await SpecialConfigurationManagement.GetConfigById(4)).Entity.Value;
-			ViewBag.BlogMainHeader = (await SpecialConfigurationManagement.GetConfigById(5)).Entity.Value;
-			ViewBag.BlogMainHeaderText = (await SpecialConfigurationManagement.GetConfigById(6)).Entity.Value;
+			ViewBag.CMSTitle = (await SpecialConfigurationManagement.GetConfigById(4)).Entity.Value;
+			ViewBag.CMSMainHeader = (await SpecialConfigurationManagement.GetConfigById(5)).Entity.Value;
+			ViewBag.CMSMainHeaderText = (await SpecialConfigurationManagement.GetConfigById(6)).Entity.Value;
 
 			ViewBag.Pic1Title = (await SpecialConfigurationManagement.GetConfigById(7)).Entity.Value;
 			ViewBag.Pic2Title = (await SpecialConfigurationManagement.GetConfigById(8)).Entity.Value;

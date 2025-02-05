@@ -1,7 +1,8 @@
-﻿using BLL.Management;
-using BLL.Model;
-using DAL.EF;
-using DAL.EF.Repository;
+﻿using BLL.CMS.Management;
+using BLL.CMS.Model;
+using BLL.CMS.Model;
+using DAL.CMS.EF;
+using DAL.CMS.EF.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.ViewModel;

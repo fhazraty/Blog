@@ -1,6 +1,6 @@
-﻿using BLL.Management;
-using BLL.Model;
-using DAL.EF.Model;
+﻿using BLL.CMS.Management;
+using BLL.CMS.Model;
+using DAL.CMS.EF.Model;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -8,7 +8,7 @@ using WebApp.ViewModel;
 
 namespace WebApp.Controllers
 {
-    public class AccountController : BaseController
+	public class AccountController : BaseController
     {
         public IUserManagement UserManagement { get; set; }
         public AccountController(IUserManagement userManagement)

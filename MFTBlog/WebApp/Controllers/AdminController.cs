@@ -1,8 +1,9 @@
-﻿using BLL.Model;
-using BLL.Management;
+﻿using BLL.CMS.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.ViewModel;
+using BLL.CMS.Model;
+using BLL.CMS.Management;
 
 namespace WebApp.Controllers
 {
@@ -47,7 +48,7 @@ namespace WebApp.Controllers
 		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> UpdateSpecialConfiguration([FromBody] WebApp.ViewModel.SpecialConfigurationViewModel configViewModel)
 		{
-			var result = await SpecialConfigurationManagement.UpdateConfig(new BLL.Model.SpecialConfigurationViewModel()
+			var result = await SpecialConfigurationManagement.UpdateConfig(new BLL.CMS.Model.SpecialConfigurationViewModel()
 			{
 				Id = configViewModel.Id,
 				Name = configViewModel.Name,
@@ -398,7 +399,7 @@ namespace WebApp.Controllers
 		{
 			try
 			{
-				TagManagement.AddTag(new BLL.Model.TagViewModel()
+				TagManagement.AddTag(new BLL.CMS.Model.TagViewModel()
 				{
 					Id = tagViewModel.Id,
 					Name = tagViewModel.Name,
@@ -463,7 +464,7 @@ namespace WebApp.Controllers
 				return Json(new { success = false, message = errorMsg });
 			}
 
-			var result = await TagManagement.UpdateTag(new BLL.Model.TagViewModel()
+			var result = await TagManagement.UpdateTag(new BLL.CMS.Model.TagViewModel()
 			{
 				Id = tagViewModel.Id,
 				Name = tagViewModel.Name,
@@ -546,7 +547,7 @@ namespace WebApp.Controllers
 				return Json(new { successful = false, message = errorMsg });
 			}
 
-			var result = await CategoryManagement.AddNewCategoryAsync(new BLL.Model.CategoryViewModel()
+			var result = await CategoryManagement.AddNewCategoryAsync(new BLL.CMS.Model.CategoryViewModel()
 			{
 				Name = categoryViewModel.Name,
 				ParentCategoryId = categoryViewModel.ParentCategoryId,
@@ -578,7 +579,7 @@ namespace WebApp.Controllers
 				return Json(new { successful = false, message = errorMsg });
 			}
 
-			var result = await CategoryManagement.UpdateCategoryAsync(new BLL.Model.CategoryViewModel()
+			var result = await CategoryManagement.UpdateCategoryAsync(new BLL.CMS.Model.CategoryViewModel()
 			{
 				Id = categoryViewModel.Id,
 				Name = categoryViewModel.Name,

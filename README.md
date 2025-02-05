@@ -26,11 +26,11 @@ The project demonstrates how to build a modern store application using ASP.NET C
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/fhazraty/Blog.git
+   git clone https://github.com/fhazraty/WebStore.git
    ```
 2. Navigate to the project directory:
    ```bash
-   cd Blog
+   cd WebStore
    ```
 3. Restore dependencies:
    ```bash
@@ -94,11 +94,11 @@ Contributions are welcome! Please fork the repository and submit a pull request 
 
 1. مخزن را کلون کنید:
    ```bash
-   git clone https://github.com/fhazraty/Blog.git
+   git clone https://github.com/fhazraty/WebStore.git
    ```
 2. به دایرکتوری پروژه بروید:
    ```bash
-   cd Blog
+   cd WebStore
    ```
 3. وابستگی‌ها را بازیابی کنید:
    ```bash
